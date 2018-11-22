@@ -14,3 +14,5 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('cadastro-mesas','MesasController@index')->name('cadastro-mesas');
