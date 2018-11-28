@@ -15,4 +15,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('cadastro-mesas','MesasController@index')->name('cadastro-mesas');
+
+/*Route::get('admin', function () {
+    return view('admin.admin_template');
+});*/
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+//route admin
+//Route::get('admin', ['middleware' => 'admin', 'uses' => 'AdminController@index']);
+
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
