@@ -16,16 +16,13 @@ Route::get('/', function () {
 });
 
 
-/*Route::get('admin', function () {
-    return view('admin.admin_template');
-});*/
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
 
 //route admin
 //Route::get('admin', ['middleware' => 'admin', 'uses' => 'AdminController@index']);
@@ -33,3 +30,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
+
+Route::resource('mesa','MesaController');
+Route::get('criarmesa','MesaController@index');
+Route::post('storemesa','MesaController@store');
+
+Route::resource('produto','ProdutoController');
+Route::get('criarproduto','ProdutoController@index');
+Route::post('storeproduto','ProdutoController@store');
+Route::post('produto/update/{id}','ProdutoController@update');
