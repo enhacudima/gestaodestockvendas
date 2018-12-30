@@ -175,7 +175,34 @@ return [
         [
             'text'       => 'Admin',
             'icon_color' => 'red',
-            'url'        => 'admin',   
+            'url'        => 'admin',
+            'submenu'    => [
+                            [
+                                'text'      => 'Produtos',
+                                'submenu'   => [
+                                                [
+                                                    'text' => 'Cadastro',
+                                                    'url'  => 'produto',
+                                                ],
+                                                [
+                                                    'text' => 'Entradas',
+                                                    'url'  => 'produto_entrada',
+                                                ],
+                                                [
+                                                    'text' => 'Ajustes',
+                                                    'url'  => 'ajust_index',
+                                                ],
+                                                [
+                                                    'text' => 'Reporte',
+                                                    'url'  => 'report_produt',
+                                                ],
+                                            ],
+                            ],
+                            [
+                                'text' => 'Admin Area',
+                                'url'  => 'admin',
+                            ],
+                        ],   
         ],
         [
             'text'       => 'Warning',

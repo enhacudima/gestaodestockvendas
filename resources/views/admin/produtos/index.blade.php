@@ -61,39 +61,18 @@
 
             <div class="row">
                     <div class="from-group col-lg-12">
-                        <label>Data de Entrada</label>
-                        <input type="date" name="dataentrada" id="dataentrada" class="form-control" value="{{old('dataentrada')}}" required autofocus>
+                        <label>Tipo de Unidade de Medida</label>
+                        <input type="text" name="tipodeunidadedemedida" id="tipodeunidadedemedida" class="form-control" value="{{old('tipodeunidadedemedida')}}" required autofocus>
                     </div>
             </div>  
 
             <div class="row">
                     <div class="from-group col-lg-12">
-                        <label>Data de Expiracão</label>
-                        <input type="date" name="dataexpiracao" id="dataexpiracao" class="form-control" value="{{old('dataexpiracao')}}" >
+                        <label>Unidade de Medida</label>
+                        <input type="number" name="unidadedemedida" id="unidadedemedida" class="form-control" value="{{old('unidadedemedida')}}" >
                     </div>
             </div> 
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Fornecedor</label>
-                        <input type="text" name="fornecedor" id="fornecedor" class="form-control" value="{{old('fornecedor')}}" required autofocus>
-                    </div>
-            </div>  
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Preço de compra</label>
-                        <input type="number" name="precocompra" id="precocompra" class="form-control" value="{{old('precocompra')}}" required autofocus>
-                    </div>
-            </div>   
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Preço de Revenda</label>
-                        <input type="number" name="precorevenda" id="precorevenda" class="form-control" value="{{old('precorevenda')}}" required autofocus>
-                    </div>
-            </div>
      
-
             <div class="row">
 
                 <div class="from-group text-right col-md-12">
@@ -129,11 +108,8 @@
             <th scope="col">Codigo de Barras</th>
             <th scope="col">Brand</th>
             <th scope="col">Descrição</th>
-            <th scope="col">Data de Entrada</th>
-            <th scope="col">Data de Expiracão</th>
-            <th scope="col">Fornecedor</th>
-            <th scope="col">Preço de compra</th>
-            <th scope="col">Preço de Revenda</th>
+            <th scope="col">Tipo de Unidade de Medida</th>
+            <th scope="col">Unidade de Medida</th>
             <th scope="col">Ultima atualização</th>
         </tr>
         </thead>
@@ -150,11 +126,8 @@
              <td>{{$cil->codigobarra}}</td>
              <td>{{$cil->brand}}</td>
              <td>{{$cil->description}}</td>
-             <td>{{$cil->dataentrada}}</td>
-             <td>{{$cil->dataexpiracao}}</td>
-             <td>{{$cil->fornecedor}}</td>
-             <td>{{$cil->precocompra}}</td>
-             <td>{{$cil->precorevenda}}</td>
+             <td>{{$cil->tipodeunidadedemedida}}</td>
+             <td>{{$cil->unidadedemedida}}</td>
              <td>{{$cil->updated_at}}</td>
             </tr>
         @endforeach 

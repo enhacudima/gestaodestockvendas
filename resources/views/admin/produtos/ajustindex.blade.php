@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'BM | Cadastro de Produtos')
+@section('title', 'BM | Cadastro de Nova entrada de Produtos')
 
 @section('content_header')
     <h1>Settings</h1>
@@ -16,64 +16,48 @@
     <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h4>Editar  Produto
+        <h4>Novo Ajuste de Produto
         </h4>
     </div>
 
     <div class="panel-body">
-        <div class="col-lg-3 col-lg-offset-4">
-        <form method="post" action="{{url('produto/update',$produtos->id)}}" autocomplete="Active" accept-charset="UTF-8" >
+        <div class="col-lg-7">
+        <form method="post" action="{{{url('store_produto_ajuste')}}}" autocomplete="Active" accept-charset="UTF-8" >
             {{ csrf_field() }}
 
             <input   name="idusuario" type="hidden" id="idusuario" value="{{ Auth::user()->id }}" required autofocus>
-             @if(isset($produtos))  
+            <input   name="tipo" type="hidden" id="tipo" value="ajuste" required autofocus>
             <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Nome</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{$produtos->name}}" required autofocus>
+                    <div class="from-group col-lg-5">
+                        <label>Produto</label>
+                        <select name="produto_id" id="produto_id" class="form-control" value="{{old('produto')}}" required autofocus>
+                            @if(isset($produtos))
+                            @foreach($produtos as $cil)
+                            <option value="{{$cil->id}}">{{$cil->name}}</option>
+                            @endforeach
+                            @endif
+                        </select>
                     </div>
-            </div> 
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Codigo do Produto</label>
-                        <input type="text" name="codigoproduto" id="codigoproduto" class="form-control" value="{{$produtos->codigoproduto}}" required autofocus>
+                    <div class="from-group col-lg-3">
+                        <label>lot</label>
+                        <select name="lot_id" id="lot_id" class="form-control" value="{{old('lot_id')}}" required autofocus>
+                            @if(isset($lot))
+                            @foreach($lot as $cil)
+                            <option value="{{$cil->id}}">{{$cil->lot}}</option>
+                            @endforeach
+                            @endif
+                        </select>
                     </div>
-            </div> 
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Codigo de Barras</label>
-                        <input type="text" name="codigobarra" id="codigobarra" class="form-control" value="{{$produtos->codigobarra}}"  autofocus>
+                    <div class="from-group col-lg-2">
+                        <label>Quantidade unit</label>
+                        <input type="number" name="quantidade_unidade" id="quantidade_unidade" class="form-control" value="{{old('quantidade_unidade')}}" required autofocus>
                     </div>
-            </div> 
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Brand</label>
-                        <input type="text" name="brand" id="brand" class="form-control" value="{{$produtos->brand}}" required autofocus>
-                    </div>
-            </div>       
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
+                    <div class="from-group col-lg-2">
                         <label>Descrição</label>
-                        <input type="text" name="description" id="description" class="form-control" value="{{$produtos->description}}" required autofocus>
+                        <textarea type="textarea" name="decricao" id="decricao" class="form-control" value="{{old('decricao')}}"  autofocus></textarea>
                     </div>
             </div> 
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Tipo de Unidade de Medida</label>
-                        <input type="text" name="tipodeunidadedemedida" id="tipodeunidadedemedida" class="form-control" value="{{$produtos->tipodeunidadedemedida}}" required autofocus>
-                    </div>
-            </div>  
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Unidade de Medida</label>
-                        <input type="number" name="unidadedemedida" id="unidadedemedida" class="form-control" value="{{$produtos->unidadedemedida}}" >
-                    </div>
-            </div> 
-     
+            
 
             <div class="row">
 
@@ -83,12 +67,58 @@
                 </div>
             </div>   
                 
-           @endif
+           
         </form>
         
 
     </div>
     
+
+    <div class="col-lg-5">
+    <div class="panel panel-default">
+
+    <div class="panel-heading">
+        <h4>Lista de ajustes
+        </h4>
+    </div>
+
+    <div class="panel-body">
+
+        
+    <table id="reclatodas" class="table table-striped  table-hover" cellspacing="0" width="100%">
+        <thead >
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Produto</th>
+            <th scope="col">Lot</th>
+            <th scope="col">Quantidade</th>
+            <th scope="col">Descricão</th>
+            <th scope="col">Criado em</th>
+            <th scope="col">atualizado em</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if(isset($ajustes))    
+        @foreach($ajustes as $cil)
+            <tr>
+             <td>{{$cil->id}}</td>
+             <td>             <a class="btn btn btn-success btn-xs" href="{{action('ProdutoController@show', $cil->produto_id)}}">
+                <i class="fa fa-pencil fa-fw"></i> {{$cil->name}}
+             </a>
+            </td> 
+             <td>{{$cil->lot}}</td>
+             <td>{{$cil->quantidade_unidade}}</td>
+             <td>{{$cil->decricao}}</td>
+             <td>{{$cil->created_at}}</td>
+             <td>{{$cil->updated_at}}</td>
+            </tr>
+        @endforeach 
+        @endif   
+        </tbody>
+    </table>
+        </div>
+    </div>
+</div>
 </div>
 
 </div>

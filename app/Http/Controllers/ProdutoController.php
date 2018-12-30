@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Produtos;
+use App\Entradas;
+use App\Ajustes;
+use DB;
 
 class ProdutoController extends Controller
 {
@@ -76,12 +79,13 @@ class ProdutoController extends Controller
     {
         
 
-        $produtos=$request->all();
+        $produtos=request()->except(['_token']);
+
 
         Produtos::where('id',$id)
                 ->update($produtos);
 
-        return back()->with('success','Successfully Updated');
+        return $this->index()->with('success','Successfully Updated');
     }
 
     /**
@@ -93,5 +97,65 @@ class ProdutoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function entradaindex(){
+        $produtos=Produtos::all();
+        $entradas=Entradas::join('produtos','produtos_entradas.produto_id','produtos.id')
+                            ->select('produtos_entradas.*','produtos.name')
+                            ->get();
+        return view('admin.produtos.entradaindex', compact('produtos','entradas'));
+    }
+
+    public function entradastore(Request $request)
+    {
+        $produto=Produtos::find($request->produto_id);
+        $entrada= new Entradas;
+        $entrada->produto_id=$request->produto_id;
+        $entrada->lot="Produt-Lot-".time();
+        $entrada->quantidade=$request->quantidade;
+        $entrada->precodecompra=$request->precodecompra;
+        $entrada->margem_per=$request->margem_per;
+        $entrada->idusuario=$request->idusuario;
+        $entrada->quantidade_unitaria=$request->quantidade*$produto->unidadedemedida;
+        $entrada->custo_unitario=($request->precodecompra/$request->quantidade/$produto->unidadedemedida);
+        $entrada->margem=$entrada->custo_unitario*($request->margem_per/100);
+        $entrada->preco_final=$entrada->custo_unitario+$entrada->margem;
+
+       // dd($entrada);
+        $entrada->save();
+
+        return back()->with('success','Successfully Added');
+    }
+
+    public function ajustindex()
+    {
+      $produtos=Produtos::all();
+      $lot=Entradas::distinct('lot')->get();
+      $ajustes=Ajustes::join('produtos','produtos_ajustes.produto_id','produtos.id')
+                      ->join('produtos_entradas','produtos_ajustes.lot_id','produtos_entradas.id')
+                      ->select('produtos_ajustes.*','produtos_entradas.lot','produtos.name')
+                      ->get();
+      
+      return view('admin.produtos.ajustindex',compact('produtos','lot','ajustes'));  
+    }
+    public function ajustestore(Request $request)
+    {   $data=$request->all();
+
+        Ajustes::create($data);
+
+        return back()->with('success','Successfully Added');
+    }
+    public function report()
+    {   
+        $movimentos=Produtos::leftjoin('produtos_entradas_view','produtos.id','produtos_entradas_view.id')
+                              ->leftjoin('produtos_ajustes_view','produtos.id','produtos_ajustes_view.id')
+                              ->select('produtos.id','produtos.name',DB::raw('Sum(produtos_ajustes_view.total_ajuste) as total_ajuste '),
+                                    DB::raw('Sum(produtos_entradas_view.total_entrada) as total_entrada'))
+                                ->groupby('produtos.name','produtos.id')
+                                ->get();
+                     
+                            
+        return view('admin.Produtos.report',compact('movimentos'));
     }
 }

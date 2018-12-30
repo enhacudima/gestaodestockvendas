@@ -39,3 +39,8 @@ Route::resource('produto','ProdutoController');
 Route::get('criarproduto','ProdutoController@index');
 Route::post('storeproduto','ProdutoController@store');
 Route::post('produto/update/{id}','ProdutoController@update');
+Route::get('produto_entrada','ProdutoController@entradaindex');
+Route::post('store_produto_entrada','ProdutoController@entradastore');
+Route::get('ajust_index','ProdutoController@ajustindex');
+Route::post('store_produto_ajuste','ProdutoController@ajustestore');
+Route::get('report_produt','ProdutoController@report');

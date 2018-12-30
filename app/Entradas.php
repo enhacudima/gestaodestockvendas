@@ -4,13 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Produtos extends Model
+class Entradas extends Model
 {
-    protected $table = 'produtos';
+    protected $table = 'produtos_entradas';
     protected $guarded =array();
-        protected $hidden = [
-        'remember_token',
-    ];
 
     public $primaryKey = 'id';
 

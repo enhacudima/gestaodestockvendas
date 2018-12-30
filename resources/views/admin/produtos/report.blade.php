@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'BM | Cadastro de Produtos')
+@section('title', 'BM | Cadastro de Nova entrada de Produtos')
 
 @section('content_header')
     <h1>Settings</h1>
@@ -16,79 +16,56 @@
     <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h4>Editar  Produto
+        <h4>Novo Ajuste de Produto
         </h4>
     </div>
 
     <div class="panel-body">
-        <div class="col-lg-3 col-lg-offset-4">
-        <form method="post" action="{{url('produto/update',$produtos->id)}}" autocomplete="Active" accept-charset="UTF-8" >
-            {{ csrf_field() }}
 
-            <input   name="idusuario" type="hidden" id="idusuario" value="{{ Auth::user()->id }}" required autofocus>
-             @if(isset($produtos))  
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Nome</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{$produtos->name}}" required autofocus>
-                    </div>
-            </div> 
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Codigo do Produto</label>
-                        <input type="text" name="codigoproduto" id="codigoproduto" class="form-control" value="{{$produtos->codigoproduto}}" required autofocus>
-                    </div>
-            </div> 
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Codigo de Barras</label>
-                        <input type="text" name="codigobarra" id="codigobarra" class="form-control" value="{{$produtos->codigobarra}}"  autofocus>
-                    </div>
-            </div> 
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Brand</label>
-                        <input type="text" name="brand" id="brand" class="form-control" value="{{$produtos->brand}}" required autofocus>
-                    </div>
-            </div>       
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Descrição</label>
-                        <input type="text" name="description" id="description" class="form-control" value="{{$produtos->description}}" required autofocus>
-                    </div>
-            </div> 
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Tipo de Unidade de Medida</label>
-                        <input type="text" name="tipodeunidadedemedida" id="tipodeunidadedemedida" class="form-control" value="{{$produtos->tipodeunidadedemedida}}" required autofocus>
-                    </div>
-            </div>  
-
-            <div class="row">
-                    <div class="from-group col-lg-12">
-                        <label>Unidade de Medida</label>
-                        <input type="number" name="unidadedemedida" id="unidadedemedida" class="form-control" value="{{$produtos->unidadedemedida}}" >
-                    </div>
-            </div> 
-     
-
-            <div class="row">
-
-                <div class="from-group text-right col-md-12">
-                     <label></label>
-                    <input class="btn btn-primary" type="submit" value="Submit">
-                </div>
-            </div>   
-                
-           @endif
-        </form>
-        
-
-    </div>
     
+
+    <div class="col-lg-12">
+    <div class="panel panel-default">
+
+    <div class="panel-heading">
+        <h4>Lista de ajustes
+        </h4>
+    </div>
+
+    <div class="panel-body">
+
+        
+    <table id="reclatodas" class="table table-striped  table-hover" cellspacing="0" width="100%">
+        <thead >
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Produto</th>
+            <th scope="col">Total Entrada</th>
+            <th scope="col">Total Ajuste</th>
+            <th scope="col">Variance</th>
+            <th scope="col">Criado em</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if(isset($movimentos))    
+        @foreach($movimentos as $cil)
+            <tr>
+             <td>{{$cil->id}}</td>
+             <td>             <a class="btn btn btn-success btn-xs" href="{{action('ProdutoController@show', $cil->id)}}">
+                <i class="fa fa-pencil fa-fw"></i> {{$cil->name}}
+             </a>
+            </td> 
+            <td>{{$cil->total_entrada}}</td>
+            <td>{{$cil->total_ajuste}}</td>
+            <td>{{$cil->total_entrada - $cil->total_ajuste}}</td>
+            </tr>
+        @endforeach 
+        @endif   
+        </tbody>
+    </table>
+        </div>
+    </div>
+</div>
 </div>
 
 </div>

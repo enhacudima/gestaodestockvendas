@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Produtos extends Model
+class Ajustes extends Model
 {
-    protected $table = 'produtos';
+    protected $table = 'produtos_ajustes';
     protected $guarded =array();
         protected $hidden = [
         'remember_token',
