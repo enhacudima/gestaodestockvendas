@@ -158,4 +158,44 @@ class ProdutoController extends Controller
                             
         return view('admin.Produtos.report',compact('movimentos'));
     }
+
+    public function lotshow($id)
+    {   
+        $produtos=Entradas::join('produtos','produtos_entradas.produto_id','produtos.id')
+                            ->where('produtos_entradas.id',$id)
+                            ->select('produtos_entradas.*','produtos.name')
+                            ->get();
+       
+        return view('admin.Produtos.entradashow',compact('produtos'));
+    }
+
+    public function loteupdate (Request $request)
+    {   
+        $produto=Produtos::find($request->produto_id);
+        $entrada= new Entradas;
+        $quantidade=$entrada->quantidade=$request->quantidade;
+        $precodecompra=$entrada->precodecompra=$request->precodecompra;
+        $margem_per=$entrada->margem_per=$request->margem_per;
+        $idusuario=$entrada->idusuario=$request->idusuario;
+        $quantidade_unitaria=$entrada->quantidade_unitaria=$request->quantidade*$produto->unidadedemedida;
+        $custo_unitario=$entrada->custo_unitario=($request->precodecompra/$request->quantidade/$produto->unidadedemedida);
+        $margem=$entrada->margem=$entrada->custo_unitario*($request->margem_per/100);
+        $preco_final=$entrada->preco_final=$entrada->custo_unitario+$entrada->margem;
+
+       
+
+
+        Entradas::where('id',$request->id)
+                ->update(['quantidade'=>$quantidade,
+                        'precodecompra'=>$precodecompra,
+                        'margem_per'=>$margem_per,
+                        'idusuario'=>$idusuario,
+                        'quantidade_unitaria'=>$quantidade_unitaria,
+                        'custo_unitario'=>$custo_unitario,
+                        'margem'=>$margem,
+                        'preco_final'=>$preco_final,
+                    ]);
+
+        return $this->entradaindex()->with('success','Successfully update');
+    }
 }

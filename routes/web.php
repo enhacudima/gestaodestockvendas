@@ -44,3 +44,5 @@ Route::post('store_produto_entrada','ProdutoController@entradastore');
 Route::get('ajust_index','ProdutoController@ajustindex');
 Route::post('store_produto_ajuste','ProdutoController@ajustestore');
 Route::get('report_produt','ProdutoController@report');
+Route::get('show_produto_entrada/{id}','ProdutoController@lotshow');
+Route::post('produto/entrada/update','ProdutoController@loteupdate');
