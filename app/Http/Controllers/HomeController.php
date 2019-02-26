@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Mesa;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -23,7 +24,7 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   $mesa=Mesa::get();
+    {   $mesa=Mesa::join('users','mesa.idusuario','users.id')->select('users.name as username','mesa.name','mesa.description','mesa.status','mesa.updated_at','mesa.created_at','mesa.id')->get();
         return view('home',compact('mesa'));
     }
 }

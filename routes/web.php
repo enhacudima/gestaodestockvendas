@@ -34,6 +34,7 @@ Route::group(['prefix' => 'admin'], function () {
 Route::resource('mesa','MesaController');
 Route::get('criarmesa','MesaController@index');
 Route::post('storemesa','MesaController@store');
+Route::post('updatemesa','MesaController@updatemesa');
 
 Route::resource('produto','ProdutoController');
 Route::get('criarproduto','ProdutoController@index');
@@ -46,3 +47,5 @@ Route::post('store_produto_ajuste','ProdutoController@ajustestore');
 Route::get('report_produt','ProdutoController@report');
 Route::get('show_produto_entrada/{id}','ProdutoController@lotshow');
 Route::post('produto/entrada/update','ProdutoController@loteupdate');
+//obter lot_id
+Route::get('findlotid','ProdutoController@lotid');

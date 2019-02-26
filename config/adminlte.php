@@ -110,71 +110,20 @@ return [
     'menu' => [
         'MAIN NAVIGATION',
         [
-            'text' => 'Blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
-        ],
-        [
-            'text'        => 'Pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'file',
-            'label'       => 4,
-            'label_color' => 'success',
-        ],
-        'ACCOUNT SETTINGS',
-        [
-            'text' => 'Profile',
-            'url'  => 'admin/settings',
-            'icon' => 'user',
-            
-        ],
-        [
-            'text' => 'Change Password',
-            'url'  => 'admin/settings',
-            'icon' => 'lock',
-        ],
-        [
             'text'    => 'Menu',
-            'icon'    => 'share',
+            'icon'    => 'th',
             'submenu' => [
                 [
-                    'text' => 'Painel de Venda',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'Level One',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'Level Two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'Level Two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'Level One',
-                    'url'  => '#',
+                    'text' => 'Home',
+                    'icon' => 'home',
+                    'url'  => 'home',
                 ],
             ],
         ],
         'Outros',
         [
             'text'       => 'Admin',
-            'icon_color' => 'red',
+            'icon'       =>'cog',
             'url'        => 'admin',
             'submenu'    => [
                             [
@@ -199,19 +148,22 @@ return [
                                             ],
                             ],
                             [
-                                'text' => 'Admin Area',
+                                'text'      => 'Mesas',
+                                'submenu'   => [
+                                                [
+                                                    'text' => 'Cadastro',
+                                                    'url'  => 'criarmesa',
+                                                ],
+
+                                            ],
+                            ],
+                            [
+                                'text' => 'Configurações',
                                 'url'  => 'admin',
                             ],
                         ],   
         ],
-        [
-            'text'       => 'Warning',
-            'icon_color' => 'yellow',
-        ],
-        [
-            'text'       => 'Information',
-            'icon_color' => 'aqua',
-        ],
+
     ],
 
     /*

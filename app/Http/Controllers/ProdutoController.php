@@ -20,6 +20,7 @@ class ProdutoController extends Controller
         return view('admin.produtos.index',compact('produtos'));
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -38,9 +39,18 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        $data=$request->all();
+        $this->validate($request, [
+            'name'=>'required|min:3',
+            'codigoproduto'=>'required',
+            'codigobarra'=>'required|max:192',
+            'brand'=>'required|max:192',
+            'description'=>'required|string|max:192',
+            'tipodeunidadedemedida'=>'required|string|max:192',
+            'unidadedemedida'=>'required|regex:/^\d+(\.\d{1,2})?$/',
 
-        Produtos::create($data);
+        ]);
+
+        Produtos::create($request->all());
 
         return back()->with('success','Successfully Added to List');
     }
@@ -80,12 +90,31 @@ class ProdutoController extends Controller
         
 
         $produtos=request()->except(['_token']);
+            $this->validate($request, [
+            'name'=>'required|min:3',
+            'codigoproduto'=>'required',
+            'codigobarra'=>'required|max:192',
+            'brand'=>'required|max:192',
+            'description'=>'required|string|max:192',
+            'tipodeunidadedemedida'=>'required|string|max:192',
+            'unidadedemedida'=>'required|regex:/^\d+(\.\d{1,2})?$/',
+            'status'=>'required',
 
+        ]);
 
+        $temp_name=Produtos::where('name',$request->name)->first();
+
+        //dd($temp_name->status);   
+        if ($temp_name->status==1) { 
+            return back()->with('error','Não pode activar mas de 1 produto com mesmo nome');
+        } else {
+        
+        
         Produtos::where('id',$id)
                 ->update($produtos);
 
-        return $this->index()->with('success','Successfully Updated');
+        return back()->with('success','Successfully Updated');
+        }
     }
 
     /**
@@ -139,8 +168,37 @@ class ProdutoController extends Controller
       
       return view('admin.produtos.ajustindex',compact('produtos','lot','ajustes'));  
     }
+
+        public function lotid(Request $request)
+
+    {
+
+        if($request->ajax())
+        {
+        $output="";
+
+        $data=Entradas::where('produto_id',$request->search)->get();
+
+        if($data)
+        {   foreach ($data as $key => $cil) {
+            $output.='<option value="'.$cil->id.'">' .$cil->lot.'</option>';
+            }
+
+            return Response($output);
+        }
+        }
+    }
+
     public function ajustestore(Request $request)
-    {   $data=$request->all();
+    {       
+        $data=$request->all();
+        $this->validate($request, [
+            'produto_id'=>'required',
+            'lot_id'=>'required',
+            'quantidade_unidade'=>'required',
+            'decricao'=>'required|max:192',
+
+        ]);
 
         Ajustes::create($data);
 
@@ -148,12 +206,13 @@ class ProdutoController extends Controller
     }
     public function report()
     {   
-        $movimentos=Produtos::leftjoin('produtos_entradas_view','produtos.id','produtos_entradas_view.id')
-                              ->leftjoin('produtos_ajustes_view','produtos.id','produtos_ajustes_view.id')
-                              ->select('produtos.id','produtos.name',DB::raw('Sum(produtos_ajustes_view.total_ajuste) as total_ajuste '),
+        $movimentos=DB::table('produtos_entradas_view')
+                            ->join('produtos','produtos_entradas_view.id','produtos.id')
+                            ->leftjoin('produtos_ajustes_view','produtos_entradas_view.entrada_lot','produtos_ajustes_view.lot')
+                            ->select('produtos.id','produtos.name','produtos_entradas_view.entrada_lot','produtos_ajustes_view.lot','produtos_entradas_view.entrada_preco',DB::raw('Sum(produtos_ajustes_view.total_ajuste) as total_ajuste '),
                                     DB::raw('Sum(produtos_entradas_view.total_entrada) as total_entrada'))
-                                ->groupby('produtos.name','produtos.id')
-                                ->get();
+                            ->groupby('produtos_ajustes_view.lot','produtos.name','produtos.id','produtos_entradas_view.entrada_lot','entrada_preco')
+                            ->get();
                      
                             
         return view('admin.Produtos.report',compact('movimentos'));
@@ -165,7 +224,7 @@ class ProdutoController extends Controller
                             ->where('produtos_entradas.id',$id)
                             ->select('produtos_entradas.*','produtos.name')
                             ->get();
-       
+       //dd($produtos[0]->status);
         return view('admin.Produtos.entradashow',compact('produtos'));
     }
 
@@ -181,10 +240,31 @@ class ProdutoController extends Controller
         $custo_unitario=$entrada->custo_unitario=($request->precodecompra/$request->quantidade/$produto->unidadedemedida);
         $margem=$entrada->margem=$entrada->custo_unitario*($request->margem_per/100);
         $preco_final=$entrada->preco_final=$entrada->custo_unitario+$entrada->margem;
+        $status=$entrada->status=$request->status;
 
-       
+
+        $temp_name=Entradas::where('produto_id',$request->produto_id)->get();
+        //dd($status);
+        $ver=0;
+        if ($status==1) 
+        {
+            foreach ($temp_name as $value) {
+                //dd($value->status);
+            if ($value->status==1) { 
+                //dd($value->status);
+                $ver=$value->status;
+            }    
+            }
+            //dd($ver);
+            if ($ver==1){
+            return back()->with('error','Não pode activar mas de 1 produto com mesmo nome');
+                };
+        };
+          
 
 
+        
+        
         Entradas::where('id',$request->id)
                 ->update(['quantidade'=>$quantidade,
                         'precodecompra'=>$precodecompra,
@@ -194,8 +274,16 @@ class ProdutoController extends Controller
                         'custo_unitario'=>$custo_unitario,
                         'margem'=>$margem,
                         'preco_final'=>$preco_final,
+                        'status'=>$status,
                     ]);
 
         return $this->entradaindex()->with('success','Successfully update');
+
+        
+
+       
+
+
+
     }
 }

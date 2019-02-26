@@ -36,6 +36,10 @@ class MesaController extends Controller
     public function store(Request $request)
     {
         $data=$request->all();
+        $this->validate($request, [
+            'name'=>'required',
+            'description'=>'required',
+            ]);
 
         Mesa::create($data);
 
@@ -50,9 +54,9 @@ class MesaController extends Controller
      */
     public function show($id)
     {
-        $mesas=Mesa::find($id);
-       // dd($mesas);
-        return view ('admin.mesa.index',compact('mesas'));   
+        $mesa=Mesa::find($id);
+       // dd($mesa);
+        return view ('admin.mesa.show',compact('mesa'));   
     }
 
     /**
@@ -84,8 +88,13 @@ class MesaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function updatemesa(Request $request)
+    {    
+        $mesa=request()->except(['_token']);
+          
+        Mesa::where('id',$mesa['id'])
+                ->update($mesa);
+
+        return $this->index()->with('success','Successfully Updated');        
     }
 }

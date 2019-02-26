@@ -40,26 +40,46 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Produto</th>
-            <th scope="col">Total Entrada</th>
-            <th scope="col">Total Ajuste</th>
-            <th scope="col">Variance</th>
-            <th scope="col">Criado em</th>
+            <th scope="col">Lot Entradas</th>
+            <th scope="col">Lot Ajuste</th>
+            <th scope="col">Preço Únitario</th>
+            <th scope="col">Total Entrada (unidade)</th>
+            <th scope="col">Total Ajuste (unidade)</th>
+            <th scope="col">Variance (unidade)</th>
+            <th scope="col">Valor</th>
         </tr>
         </thead>
         <tbody>
-        @if(isset($movimentos))    
+        @if(isset($movimentos))  
+        @php($i=0)  
         @foreach($movimentos as $cil)
             <tr>
              <td>{{$cil->id}}</td>
              <td>             <a class="btn btn btn-success btn-xs" href="{{action('ProdutoController@show', $cil->id)}}">
                 <i class="fa fa-pencil fa-fw"></i> {{$cil->name}}
              </a>
-            </td> 
+            </td>
+            <td>{{$cil->entrada_lot}}</td> 
+            <td>{{$cil->lot}}</td> 
+            <td>{{$cil->entrada_preco}}MTN</td> 
             <td>{{$cil->total_entrada}}</td>
             <td>{{$cil->total_ajuste}}</td>
             <td>{{$cil->total_entrada - $cil->total_ajuste}}</td>
+            <td>{{$cil->entrada_preco * $cil->total_ajuste}}MTN</td>
+            @php($i=$cil->entrada_preco * $cil->total_ajuste+$i)
             </tr>
         @endforeach 
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total:</td>
+                <td>{{$i}}MTN</td>
+            </tr>
         @endif   
         </tbody>
     </table>
