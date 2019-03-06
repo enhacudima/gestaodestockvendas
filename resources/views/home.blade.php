@@ -7,29 +7,51 @@
 @stop
 
 @section('content')
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- JavaScripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+  
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+    <link rel="stylesheet" type="text/css" href="{{asset('src/bootstrap-duallistbox.css')}}">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <script src="{{ asset('src/jquery.bootstrap-duallistbox.js') }}"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" >
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"></script>
+
 	@if($mesa)
 		@foreach($mesa as $key => $cil)
+
            <div class="row col-lg-3 col-md-offset-1">
-            <div class="info-box" style="width: 100%">
-              <!-- Apply any bg-* class to to the icon to color it -->
-              @if($cil->description=="car")
-              <span class="info-box-icon bg-red"><i class="fa fa-car" aria-hidden="true"></i></span>
-              @else
-              <span class="info-box-icon bg-green"><i class="fa fa-coffee" aria-hidden="true"></i></span>
-              @endif
-              <div class="info-box-content">
-                <span class="info-box-number">Mesa: {{$cil->name}}</span>
-                <span class="info-box-text"><b>Alterado Por:</b> {{$cil->username}}</span>
+                  <!-- Small boxes (Stat box) -->
+
+            <!-- small box -->
+            <div class="small-box bg-blue">
+              <div class="inner">
                 @if($cil->status==0)
-                 <button type="submit" data-toggle="modal" data-target="#ticket-edit-mesa-modal" class="droplist btn btn-danger btn-flat" value="{{$cil->id}}" id="droplist">Ocupada </button> <b> Last Update: </b>
-                 {{$cil->updated_at->diffForHumans()}}
+                <h3 style="color:red">{{$cil->name}}</h3>
                 @else
-                 <button type="submit" data-toggle="modal" data-target="#ticket-edit-mesa-modal" class="droplist  btn btn-primary btn-flat" value="{{$cil->id}}" id="droplist">livre </button>
+                <h3>{{$cil->name}}</h3>
+                @endif
+                <p>{{$cil->username}}</p>
+                <p>{{$cil->updated_at->diffForHumans()}}</p>
+              </div>
+              <div class="icon">
+                @if($cil->description=="car")
+                <i class="fa fa-car"></i>
+                @else
+                <i class="fa fa-shopping-cart"></i>
                 @endif
               </div>
-              <!-- /.info-box-content -->
+
+              <a href="#ticket-edit-mesa-modal" type="submit"  class=" small-box-footer" data-toggle="modal" data-target="#ticket-edit-mesa-modal"  data-value="{{$cil->id}}" id="droplist">
+                More info <i class="fa fa-arrow-circle-right"></i>
+              </a>
+        
             </div>
+            <!-- ./col -->
             <!-- /.info-box -->
         </div>
         @endforeach
@@ -40,10 +62,6 @@
         <div class="modal fade bd-example-modal-lg" id="ticket-edit-mesa-modal" tabindex="-1" role="dialog" aria-labelledby="ticket-edit-mesa-modal-Label">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content" >
-                    <form method="POST" action="" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <input name="idsolicitacao" type="hidden" id="idsolicitacao" value="">
-                        <input   name="idusuario" type="hidden" id="idusuario" value="{{ Auth::user()->id }}">
                     <div class="modal-header">
                         <h4 class="modal-title" id="ticket-edit-mesa-modal-Label">Detalhes </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -51,31 +69,69 @@
                     </div> 
 
                     <div class="modal-body">
-                        <div class="w3-container">
-                          <h2>Tabs</h2>
-                          <p>Tabs are perfect for single page web applications, or for web pages capable of displaying different subjects. Click on the links below.</p>
-                        </div>
-
-                        <div class="w3-bar w3-black">
-                          <button class="w3-bar-item w3-button" onclick="openCity('London')">London</button>
-                          <button class="w3-bar-item w3-button" onclick="openCity('Paris')">Paris</button>
-                          <button class="w3-bar-item w3-button" onclick="openCity('Tokyo')">Tokyo</button>
-                        </div>
-
-                        <div id="London" class="w3-container city">
-                          <h2>London</h2>
-                          <p>London is the capital city of England.</p>
-                        </div>
-
-                        <div id="Paris" class="w3-container city" style="display:none">
-                          <h2>Paris</h2>
-                          <p>Paris is the capital of France.</p> 
-                        </div>
-
-                        <div id="Tokyo" class="w3-container city" style="display:none">
-                          <h2>Tokyo</h2>
-                          <p>Tokyo is the capital of Japan.</p>
-                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                              <!-- Custom Tabs -->
+                              <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                  <li class="active"><a href="#tab_1" data-toggle="tab">Seleção de Produtos</a></li>
+                                  <li><a href="#tab_2" data-toggle="tab">Contas a Pagar</a></li>
+                                  <li><a href="#tab_3" data-toggle="tab">Contas Pagas</a></li>
+                                  <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                      Dropdown <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                                      <li role="presentation" class="divider"></li>
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+                                    </ul>
+                                  </li>
+                                  <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                                </ul>
+                                <div class="tab-content">
+                                  <div class="tab-pane active" id="tab_1">
+                                    <div></div>
+                                      <form id="demoform" action="#" method="post">
+                                         {{ csrf_field() }}
+                                        <select multiple="multiple" size="10" name="duallistbox_demo1[]" title="duallistbox_demo1[]">
+                                          @foreach($produtos as $key => $cil)
+                                          <option value="{{$cil->id}}">{{$cil->name}}</option>
+                                          @endforeach
+                                        </select>
+                                        <br>
+                                        <button type="submit" class="btn btn-default btn-block">Submit data</button>
+                                      </form>
+                                  </div>
+                                  <!-- /.tab-pane -->
+                                  <div class="tab-pane" id="tab_2">
+                                    The European languages are members of the same family. Their separate existence is a myth.
+                                    For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ
+                                    in their grammar, their pronunciation and their most common words. Everyone realizes why a
+                                    new common language would be desirable: one could refuse to pay expensive translators. To
+                                    achieve this, it would be necessary to have uniform grammar, pronunciation and more common
+                                    words. If several languages coalesce, the grammar of the resulting language is more simple
+                                    and regular than that of the individual languages.
+                                  </div>
+                                  <!-- /.tab-pane -->
+                                  <div class="tab-pane" id="tab_3">
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                    when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                    It has survived not only five centuries, but also the leap into electronic typesetting,
+                                    remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
+                                    sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
+                                    like Aldus PageMaker including versions of Lorem Ipsum.
+                                  </div>
+                                  <!-- /.tab-pane -->
+                                </div>
+                                <!-- /.tab-content -->
+                              </div>
+                              <!-- nav-tabs-custom -->
+                            </div>
+                            <!-- /.col -->
 
                     </div>
                           
@@ -84,22 +140,22 @@
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <input class="btn btn-primary" type="submit" value="Submit">
+                               
                             </div>
-                    </form>
                         </div>
                     </div>
         </div>   
+
 
 
             <!-- JavaScript de Popup de List -->
         <script>
             var jqxhr = {abort: function () {}};
 
-           $(document).on('click', 'button[id=droplist]',(function() {//using delegaction to send event on dynamic datatable
+           $(document).on('click', '#droplist',(function() {//using delegaction to send event on dynamic datatable
 
 
-                    $value=$(this).val();
+                    $value=$(this).data("value");
                     //alert($value);
                     console.log($value);
 
@@ -107,16 +163,18 @@
             }));
             $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
 
-        </script>  
+        </script> 
 
         <script>
-        function openCity(cityName) {
-          var i;
-          var x = document.getElementsByClassName("city");
-          for (i = 0; i < x.length; i++) {
-            x[i].style.display = "none";  
-          }
-          document.getElementById(cityName).style.display = "block";  
-        }
-        </script> 
+          var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
+          $("#demoform").submit(function() {
+        
+            alert($('[name="duallistbox_demo1[]"]').val());
+            return false;
+          });
+        </script>
+
+
+
+
 @stop

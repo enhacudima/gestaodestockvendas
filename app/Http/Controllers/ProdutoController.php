@@ -102,19 +102,15 @@ class ProdutoController extends Controller
 
         ]);
 
-        $temp_name=Produtos::where('name',$request->name)->first();
 
-        //dd($temp_name->status);   
-        if ($temp_name->status==1) { 
-            return back()->with('error','Não pode activar mas de 1 produto com mesmo nome');
-        } else {
-        
         
         Produtos::where('id',$id)
                 ->update($produtos);
 
         return back()->with('success','Successfully Updated');
-        }
+        
+
+
     }
 
     /**
