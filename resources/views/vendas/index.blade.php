@@ -68,14 +68,18 @@
             <div class="col-md-6" style="margin-top: 55px">
                 <h3>Carrinho</h3>
                 <label style="margin-right: 13px; width: 70%">Descrição do Produto</label><label style="width: 60px">Qua.t</label>
+                <form id="carrinhoform" action="#" method="POST">
+                    {{ csrf_field() }}
                 <div class="increment">
                     @if ($data_mesa)
                         <?php foreach ($data_mesa as $key => $value): ?>
-                             <input type="text" name="produt" id="produt" style="margin-right: 13px; width: 70%" disabled="" value="{{$value->name}} - {{$value->preco_final}} Mtn"> <input  type="number" name="produt" id="produt" style="width: 60px" value="{{$value->quantidade}}">
+                             <input type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input type="text" name="produt" id="produt" style="margin-right: 13px; width: 70%" disabled="" value="{{$value->name}} - {{$value->preco_final}} Mtn"> <input  type="number" name="quantidade[]" id="quantidade[]" style="width: 60px" value="{{$value->quantidade}}">
                         <?php endforeach ?>
                     @endif
                
                 </div>
+                <button type="submit" class="btn btn-primary btn-block " style="margin-top: 20px; width:79% ">Atualizar</button>
+                </form>
             </div>
             </div>
 
@@ -112,6 +116,26 @@
                   headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                   }
+                });
+            </script>
+
+            <script type="text/javascript">
+                $("#carrinhoform").submit(function(e){
+                    e.preventDefault();
+
+                    var id = $('[name="id[]"]');
+                    var quantidade = $('[name="quantidade[]"]');
+                    var _id = [];
+                    var _quantidade=[];
+
+
+                    for (var i = 0; i < id.length; i++) {
+                        _id.push($(id).eq(i).val());
+                        _quantidade.push($(quantidade).eq(i).val())
+                    }
+                    //alert(JSON.stringify(p));//or alert(p)
+                    alert(_id+''+_quantidade);           
+
                 });
             </script>
 

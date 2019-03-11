@@ -19,7 +19,8 @@ class VendasController extends Controller
         $data_mesa=VendasTempMesa::where('mesa_id',$mesa_id)
           		->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
           		->join('produtos','produtos_entradas.produto_id','produtos.id')
-          		->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final')
+          		->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id')
+          		->orderBy('vendas_temp_mesa.created_at')
           		->get();            
 
          return view('vendas.index', compact('produtos','mesa_id','data_mesa'));           
@@ -48,10 +49,11 @@ class VendasController extends Controller
           	$data_mesa=VendasTempMesa::where('mesa_id',$data['mesa_id'])
           		->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
           		->join('produtos','produtos_entradas.produto_id','produtos.id')
-          		->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final')
+          		->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id')
+          		->orderBy('vendas_temp_mesa.created_at')
           		->get();
           	foreach ($data_mesa as $key => $value) {
-          		$output.='<input type="text" name="produt" id="produt" style="margin-right: 13px; width: 70%" disabled="" value=" '.$value->name."-".$value->preco_final." Mtn".'">'.'<input  type="number" name="produt" id="produt" style="width: 60px" value="'.$value->quantidade.'">';
+          		$output.='<input type="number" name="id[]" hidden="true" value="'.$value->id.'">'.'<input type="text" name="produt" id="produt" style="margin-right: 13px; width: 70%" disabled="" value=" '.$value->name."-".$value->preco_final." Mtn".'">'.'<input  type="number" name="quantidade[]" id="quantidade[]" style="width: 60px" value="'.$value->quantidade.'">';
           	}
           	
 
