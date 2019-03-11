@@ -3,23 +3,12 @@
 @section('title', 'BMVendas | Home')
 
 @section('content_header')
-    Vendas 
+     
 @stop
 
 @section('content')
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
-  
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
-    <link rel="stylesheet" type="text/css" href="{{asset('src/bootstrap-duallistbox.css')}}">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-    <script src="{{ asset('src/jquery.bootstrap-duallistbox.js') }}"></script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" >
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"></script>
 
 	@if($mesa)
 		@foreach($mesa as $key => $cil)
@@ -31,9 +20,9 @@
             <div class="small-box bg-blue">
               <div class="inner">
                 @if($cil->status==0)
-                <h3 style="color:red">{{$cil->name}}</h3>
+                <h3 style="" ><a  href="{{url('vendasindex',$cil->id)}}" style="color: red">{{$cil->name}}</a></h3>
                 @else
-                <h3>{{$cil->name}}</h3>
+                <h3><a  href="{{url('vendasindex',$cil->id)}}" style="color: #FFFFFF">{{$cil->name}}</a></h3>
                 @endif
                 <p>{{$cil->username}}</p>
                 <p>{{$cil->updated_at->diffForHumans()}}</p>
@@ -93,17 +82,7 @@
                                 </ul>
                                 <div class="tab-content">
                                   <div class="tab-pane active" id="tab_1">
-                                    <div></div>
-                                      <form id="demoform" action="#" method="post">
-                                         {{ csrf_field() }}
-                                        <select multiple="multiple" size="10" name="duallistbox_demo1[]" title="duallistbox_demo1[]">
-                                          @foreach($produtos as $key => $cil)
-                                          <option value="{{$cil->id}}">{{$cil->name}}</option>
-                                          @endforeach
-                                        </select>
-                                        <br>
-                                        <button type="submit" class="btn btn-default btn-block">Submit data</button>
-                                      </form>
+
                                   </div>
                                   <!-- /.tab-pane -->
                                   <div class="tab-pane" id="tab_2">
@@ -146,6 +125,7 @@
                     </div>
         </div>   
 
+          
 
 
             <!-- JavaScript de Popup de List -->
@@ -165,14 +145,7 @@
 
         </script> 
 
-        <script>
-          var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
-          $("#demoform").submit(function() {
-        
-            alert($('[name="duallistbox_demo1[]"]').val());
-            return false;
-          });
-        </script>
+
 
 
 
