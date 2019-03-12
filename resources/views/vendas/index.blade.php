@@ -67,18 +67,23 @@
 
             <div class="col-md-6" style="margin-top: 55px">
                 <h3>Carrinho</h3>
-                <label style="margin-right: 13px; width: 70%">Descrição do Produto</label><label style="width: 60px">Qua.t</label>
+                <label style="margin-right: 13px; width: 71%">Descrição do Produto</label><label style="width: 67px">Preço.(Mtn)</label><label style="width: 80px">Qua.t</label><label style="width: 75px">Total.(Mtn)</label>
                 <form id="carrinhoform" action="#" method="POST">
                     {{ csrf_field() }}
                 <div class="increment">
                     @if ($data_mesa)
                         <?php foreach ($data_mesa as $key => $value): ?>
-                             <input type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input type="text" name="produt" id="produt" style="margin-right: 13px; width: 70%" disabled="" value="{{$value->name}} - {{$value->preco_final}} Mtn"> <input  type="number" name="quantidade[]" id="quantidade[]" style="width: 60px" value="{{$value->quantidade}}">
+                             <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input type="text" name="produt" id="produt" style="margin-right: 13px; width: 70%" disabled="" value="{{$value->name}}"> <input  type="number" name="preco_final[]" id="preco_final[]" style="width: 60px; margin-right: 13px" disabled="true" value="{{$value->preco_final}}"><input  type="number" name="quantidade[]" id="quantidade[]" style="width: 67px;margin-right: 13px" value="{{$value->quantidade}}"><input  type="number" name="total[]" id="total[]" style="width: 75px; margin-right: 13px" disabled="" value="{{$value->quantidade * $value->preco_final}}">
                         <?php endforeach ?>
+                        <div class="" style="margin-top: 10px">
+                         <label style="margin-left: 83%;margin-right: 9px; width: 40px">Total:</label><input  type="number" name="sum" id="sum" style="width: 75px; margin-right: 13px" disabled="true" value="">
+                        </div>
                     @endif
                
                 </div>
-                <button type="submit" class="btn btn-primary btn-block " style="margin-top: 20px; width:79% ">Atualizar</button>
+                @if ($data_mesa)
+                <button type="submit" class="btn btn-primary btn-block " style="margin-top: 10px; width:70% ">Atualizar</button>
+                @endif
                 </form>
             </div>
             </div>
@@ -104,7 +109,7 @@
                   success: function(data) {
                         $('.increment') .html(data);
 
-                    alert(data);
+                    //alert(data);
 
 
                   }});
@@ -120,11 +125,14 @@
             </script>
 
             <script type="text/javascript">
+                //atualizando os dados na tabela temporaria 
                 $("#carrinhoform").submit(function(e){
                     e.preventDefault();
 
                     var id = $('[name="id[]"]');
                     var quantidade = $('[name="quantidade[]"]');
+                    $idbulk=($('[name="idbulk"]').val());
+                    $mesa_id=($('[name="mesa_id"]').val());
                     var _id = [];
                     var _quantidade=[];
 
@@ -132,11 +140,48 @@
                     for (var i = 0; i < id.length; i++) {
                         _id.push($(id).eq(i).val());
                         _quantidade.push($(quantidade).eq(i).val())
+                        
                     }
                     //alert(JSON.stringify(p));//or alert(p)
-                    alert(_id+''+_quantidade);           
+                    //alert(_id+''+_quantidade+''+idbulk);   
+
+                $.ajax({
+                  url: "{{URL('atualizarvendatemp')}}",
+                  type:'POST',
+                  data: {idbulk:$idbulk,mesa_id:$mesa_id,id:_id,quantidade:_quantidade},
+
+                  success: function(data) {
+                        $('.increment') .html(data);
+
+                    //alert(data);
+
+
+                }});
+
 
                 });
+            </script>
+
+            <script type="text/javascript">
+                //Atualizando o preço final do carrinho
+                $(window).on('load', function() {
+                 // code here
+
+                 var total=$('[name="total[]"]')
+                 var __total=[];
+                 var sum=0;
+                 var _total=0;
+
+                 for (var i=0;i<total.length;i++){
+                    __total=$(total).eq(i).val();
+                    _total=parseFloat(__total)+parseFloat(_total);
+                 }
+                //alert(parseFloat(_total))
+                    $("#sum").val(_total);
+                 });
+
+               
+
             </script>
 
 

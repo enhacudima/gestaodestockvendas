@@ -53,3 +53,4 @@ Route::get('vendasindex/{id}','VendasController@index');
 Route::post('saveselection','VendasController@saveselection');
 Route::get('saveselection','VendasController@saveselection');
 Route::get('getmesatem','VendasController@getmesatem');
+Route::post('atualizarvendatemp','VendasController@atualizarvendatemp');
