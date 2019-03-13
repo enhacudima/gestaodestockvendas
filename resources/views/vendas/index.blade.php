@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Bmdevendas|Vendas</title>
@@ -67,22 +67,30 @@
 
             <div class="col-md-6" style="margin-top: 55px">
                 <h3>Carrinho</h3>
-                <label style="margin-right: 13px; width: 71%">Descrição do Produto</label><label style="width: 67px">Preço.(Mtn)</label><label style="width: 80px">Qua.t</label><label style="width: 75px">Total.(Mtn)</label>
+                <div class="row">
+                    <label style="margin-right: 13px; width: 40%; max-width: 60%">Descrição do Produto</label><label style="width: 67px">Preço.(Mtn)</label><label style="width: 80px">Qua.t</label><label style="width: 75px">Total.(Mtn)</label>
+                </div>
                 <form id="carrinhoform" action="#" method="POST">
                     {{ csrf_field() }}
-                <div class="increment">
-                    @if ($data_mesa)
-                        <?php foreach ($data_mesa as $key => $value): ?>
-                             <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input type="text" name="produt" id="produt" style="margin-right: 13px; width: 70%" disabled="" value="{{$value->name}}"> <input  type="number" name="preco_final[]" id="preco_final[]" style="width: 60px; margin-right: 13px" disabled="true" value="{{$value->preco_final}}"><input  type="number" name="quantidade[]" id="quantidade[]" style="width: 67px;margin-right: 13px" value="{{$value->quantidade}}"><input  type="number" name="total[]" id="total[]" style="width: 75px; margin-right: 13px" disabled="" value="{{$value->quantidade * $value->preco_final}}">
-                        <?php endforeach ?>
-                        <div class="" style="margin-top: 10px">
-                         <label style="margin-left: 83%;margin-right: 9px; width: 40px">Total:</label><input  type="number" name="sum" id="sum" style="width: 75px; margin-right: 13px" disabled="true" value="">
+                <div class="">
+                    <div class="increment">
+                        @if ($data_mesa)
+                            <?php foreach ($data_mesa as $key => $value): ?>
+                             
+                                    <div class="row">
+                                 <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input type="text" name="produt" id="produt" style="margin-right: 13px; width: 40%; max-width: 60%" disabled="" value="{{$value->name}}"> <input  type="number" name="preco_final[]" id="preco_final[]" style="width: 60px; margin-right: 13px" disabled="true" value="{{$value->preco_final}}"><input  type="number" name="quantidade[]" id="quantidade[]" style="width: 67px;margin-right: 13px" value="{{$value->quantidade}}"><input  type="number" name="total[]" id="total[]" style="width: 75px; margin-right: 13px" disabled="" value="{{$value->quantidade * $value->preco_final}}">
+                                    </div>
+                                 
+                            <?php endforeach ?>
+
+                        @endif
+                    </div>
+                        <div style="margin-top: 10px">
+                            <label  style="margin-right: 9px;margin-left:53% ; width: 40px">Total:</label><input  type="number" name="sum" id="sum" style="width: 75px; margin-right: 13px" disabled="true" value="">
                         </div>
-                    @endif
-               
                 </div>
                 @if ($data_mesa)
-                <button type="submit" class="btn btn-primary btn-block " style="margin-top: 10px; width:70% ">Atualizar</button>
+                <button type="submit" class="btn btn-primary btn-block " style="margin-top: 10px; width: 40%; max-width: 60%">Atualizar</button>
                 @endif
                 </form>
             </div>
@@ -108,6 +116,20 @@
                   data: {dados:$dados,mesa_id:$mesa_id},
                   success: function(data) {
                         $('.increment') .html(data);
+                             var total=$('[name="total[]"]')
+                             var __total=[];
+                             var sum=0;
+                             var _total=0;
+
+                             for (var i=0;i<total.length;i++){
+                                __total=$(total).eq(i).val();
+                                _total=parseFloat(__total)+parseFloat(_total);
+                             }
+                            //alert(parseFloat(_total))
+                                $("#sum").val(_total);
+
+                        
+
 
                     //alert(data);
 
@@ -152,6 +174,22 @@
 
                   success: function(data) {
                         $('.increment') .html(data);
+
+                            //retornando total
+                             var total=$('[name="total[]"]')
+                             var __total=[];
+                             var sum=0;
+                             var _total=0;
+
+                             for (var i=0;i<total.length;i++){
+                                __total=$(total).eq(i).val();
+                                _total=parseFloat(__total)+parseFloat(_total);
+                             }
+                            //alert(parseFloat(_total))
+                                $("#sum").val(_total);
+
+                        
+
 
                     //alert(data);
 
