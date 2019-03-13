@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Entradas;
 use App\VendasTempMesa;
+use App\Mesa;
 use Auth;
 
 class VendasController extends Controller
@@ -21,9 +22,10 @@ class VendasController extends Controller
           		->join('produtos','produtos_entradas.produto_id','produtos.id')
           		->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
           		->orderBy('vendas_temp_mesa.created_at')
-          		->get();            
+          		->get(); 
+        $mesa=Mesa::find($mesa_id);  		           
 
-         return view('vendas.index', compact('produtos','mesa_id','data_mesa'));           
+         return view('vendas.index', compact('produtos','mesa_id','data_mesa','mesa'));           
     }
 
     public function  saveselection(Request $request)
@@ -33,6 +35,11 @@ class VendasController extends Controller
         	$request->except('_token');	
         	$data=$request->all();
         	$identificador_de_bulk='mesa'.'_'.time();
+        	$mesa_id=$data['mesa_id'];
+
+        	$mesa=Mesa::find($mesa_id);
+        	$mesa->status=0;
+        	$mesa->save();
 
 
          
@@ -54,6 +61,7 @@ class VendasController extends Controller
           		->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
           		->orderBy('vendas_temp_mesa.created_at')
           		->get();
+
           	foreach ($data_mesa as $key => $value) {
           		$output.=
           			'<div class="row"><input type="text" id="idbulk" name="idbulk" hidden="true" value="'.$value->identificador_de_bulk.'"><input type="number" id="id[]" name="id[]" hidden="true" value="'.$value->id.'"><input type="text" name="produt" id="produt" style="margin-right: 13px;  width: 40%; max-width: 60%" disabled="" value="'.$value->name.'"> <input  type="number" name="preco_final[]" id="preco_final[]" style="width: 60px; margin-right: 13px" disabled="true" value="'.$value->preco_final.'"><input  type="number" name="quantidade[]" id="quantidade[]" style="width: 67px;margin-right: 13px" value="'.$value->quantidade.'"><input  type="number" name="total[]" id="total[]" style="width: 75px; margin-right: 13px"  disabled="true"  value="'.$value->quantidade * $value->preco_final.'"></div>';	

@@ -35,10 +35,21 @@
             }
             
         </style>
+
+        <style type="text/css">
+            .center-block {
+            padding:10px;
+            color:#ec8007
+            }
+        </style>
     </head>
     <body>
         <div class="content">
+            <div class="">
+                <div class="center-block"><h2>Mesa: {{$mesa->name}}; Operador: {{ Auth::user()->name }}</h2> </div>
+            </div>
 
+           
 
 
             <div class="col-md-12">
@@ -65,7 +76,7 @@
               </form>
             </div>
 
-            <div class="col-md-6" style="margin-top: 55px">
+            <div class="col-md-4" style="margin-top: 55px">
                 <h3>Carrinho</h3>
                 <div class="row">
                     <label style="margin-right: 13px; width: 40%; max-width: 60%">Descrição do Produto</label><label style="width: 67px">Preço.(Mtn)</label><label style="width: 80px">Qua.t</label><label style="width: 75px">Total.(Mtn)</label>
@@ -86,11 +97,11 @@
                         @endif
                     </div>
                         <div style="margin-top: 10px">
-                            <label  style="margin-right: 9px;margin-left:53% ; width: 40px">Total:</label><input  type="number" name="sum" id="sum" style="width: 75px; margin-right: 13px" disabled="true" value="">
+                            <label  style="margin-right: 9px;margin-left:58.5% ; width: 40px">Total:</label><input  type="number" name="sum" id="sum" style="width: 75px; margin-right: 13px" disabled="true" value="">
                         </div>
                 </div>
                 @if ($data_mesa)
-                <button type="submit" class="btn btn-primary btn-block " style="margin-top: 10px; width: 40%; max-width: 60%">Atualizar</button>
+                <button type="submit" class="row btn btn-primary btn-block " style="margin-top: 10px; width: 40%; max-width: 60%">Atualizar</button>
                 @endif
                 </form>
             </div>
