@@ -99,42 +99,43 @@
 
     <div class="panel-body">
 
-        
-    <table id="reclatodas" class="table table-striped  table-hover" cellspacing="0" width="100%">
-        <thead >
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Codigo do Produto</th>
-            <th scope="col">Codigo de Barras</th>
-            <th scope="col">Brand</th>
-            <th scope="col">Descrição</th>
-            <th scope="col">Tipo de Unidade de Medida</th>
-            <th scope="col">Unidade de Medida</th>
-            <th scope="col">Ultima atualização</th>
-        </tr>
-        </thead>
-        <tbody>
-        @if(isset($produtos))    
-        @foreach($produtos as $cil)
+    <div class="box-body table-responsive no-padding">     
+        <table id="reclatodas" class="table table-striped  table-hover" cellspacing="0" width="100%">
+            <thead >
             <tr>
-             <td>{{$cil->id}}</td>
-             <td>             <a class="btn btn btn-success btn-xs" href="{{action('ProdutoController@show', $cil->id)}}">
-                <i class="fa fa-pencil fa-fw"></i> {{$cil->name}}
-             </a>
-            </td> 
-             <td>{{$cil->codigoproduto}}</td>
-             <td>{{$cil->codigobarra}}</td>
-             <td>{{$cil->brand}}</td>
-             <td>{{$cil->description}}</td>
-             <td>{{$cil->tipodeunidadedemedida}}</td>
-             <td>{{$cil->unidadedemedida}}</td>
-             <td>{{$cil->updated_at}}</td>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Codigo do Produto</th>
+                <th scope="col">Codigo de Barras</th>
+                <th scope="col">Brand</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Tipo de Unidade de Medida</th>
+                <th scope="col">Unidade de Medida</th>
+                <th scope="col">Ultima atualização</th>
             </tr>
-        @endforeach 
-        @endif   
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @if(isset($produtos))    
+            @foreach($produtos as $cil)
+                <tr>
+                 <td>{{$cil->id}}</td>
+                 <td>             <a class="btn btn btn-success btn-xs" href="{{action('ProdutoController@show', $cil->id)}}">
+                    <i class="fa fa-pencil fa-fw"></i> {{$cil->name}}
+                 </a>
+                </td> 
+                 <td>{{$cil->codigoproduto}}</td>
+                 <td>{{$cil->codigobarra}}</td>
+                 <td>{{$cil->brand}}</td>
+                 <td>{{$cil->description}}</td>
+                 <td>{{$cil->tipodeunidadedemedida}}</td>
+                 <td>{{$cil->unidadedemedida}}</td>
+                 <td>{{$cil->updated_at}}</td>
+                </tr>
+            @endforeach 
+            @endif   
+            </tbody>
+        </table>
+    </div>    
         </div>
     </div>
 </div>

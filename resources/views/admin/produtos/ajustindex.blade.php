@@ -82,38 +82,39 @@
 
     <div class="panel-body">
 
-        
-    <table id="movimentos" class="table table-striped  table-hover" cellspacing="0" width="100%">
-        <thead >
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Produto</th>
-            <th scope="col">Lot</th>
-            <th scope="col">Quantidade</th>
-            <th scope="col">Descricão</th>
-            <th scope="col">Criado em</th>
-            <th scope="col">atualizado em</th>
-        </tr>
-        </thead>
-        <tbody>
-        @if(isset($ajustes))    
-        @foreach($ajustes as $cil)
+    <div class="box-body table-responsive no-padding">     
+        <table id="movimentos" class="table table-striped  table-hover" cellspacing="0" width="100%">
+            <thead >
             <tr>
-             <td>{{$cil->id}}</td>
-             <td>             <a class="btn btn btn-success btn-xs" href="{{action('ProdutoController@show', $cil->produto_id)}}">
-                <i class="fa fa-pencil fa-fw"></i> {{$cil->name}}
-             </a>
-            </td> 
-             <td>{{$cil->lot}}</td>
-             <td>{{$cil->quantidade_unidade}}</td>
-             <td>{{$cil->decricao}}</td>
-             <td>{{$cil->created_at}}</td>
-             <td>{{$cil->updated_at}}</td>
+                <th scope="col">#</th>
+                <th scope="col">Produto</th>
+                <th scope="col">Lot</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Descricão</th>
+                <th scope="col">Criado em</th>
+                <th scope="col">atualizado em</th>
             </tr>
-        @endforeach 
-        @endif   
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @if(isset($ajustes))    
+            @foreach($ajustes as $cil)
+                <tr>
+                 <td>{{$cil->id}}</td>
+                 <td>             <a class="btn btn btn-success btn-xs" href="{{action('ProdutoController@show', $cil->produto_id)}}">
+                    <i class="fa fa-pencil fa-fw"></i> {{$cil->name}}
+                 </a>
+                </td> 
+                 <td>{{$cil->lot}}</td>
+                 <td>{{$cil->quantidade_unidade}}</td>
+                 <td>{{$cil->decricao}}</td>
+                 <td>{{$cil->created_at}}</td>
+                 <td>{{$cil->updated_at}}</td>
+                </tr>
+            @endforeach 
+            @endif   
+            </tbody>
+        </table>
+      </div>  
         </div>
     </div>
 </div>

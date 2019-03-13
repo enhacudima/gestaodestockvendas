@@ -93,7 +93,28 @@
 </div>
 
 </div>
+    <script>
+         
+    $(document).ready(function() {
+        $('#reclatodas').DataTable( {
+            columnDefs: [
+                {
+                    targets: [ 0, 1, 2 ],
+                    className: 'mdl-data-table__cell--non-numeric'
+                }
+            ],
+            "order": [[ 11, "desc" ]],
+            responsive: true,
+            dom: 'lfBrtip',
+            buttons: [
+                'excel', 'print'
+            ],
+
+        } );
+    } );
+    </script>
 @stop
+
 
 @section('css')
         <style>
