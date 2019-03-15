@@ -176,8 +176,10 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <select class="form-control " value=""  id="ticket_level"  name="ticket_level" autofocus >
-                                            <option disabled value selected>Select..</option>
+                                        <select class="form-control " value="" name="detalhes[]" autofocus required="" >
+                                            <option disabled="" value="nan" selected>
+                                                Seleciona..
+                                            </option>
                                              
                                             <option value="Milennium BIM">
                                                 Milennium BIM
@@ -332,7 +334,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control " type="number" name="troco" id="troco" value="0" required="" disabled="">
+                                        <input class="form-control" type="number" name="troco" id="troco" value="0" required="" disabled="">
                                     </div>
                                 </div>
                               <!-- Custom Tabs -->
@@ -516,7 +518,7 @@
             </script>
 
             <script type="text/javascript">
-                //atualizando os dados na tabela temporaria 
+                //add venda
                 $("#formfvenda").submit(function(e){
                     e.preventDefault();
 
@@ -525,9 +527,11 @@
                     var referencia = $('[name="referencia[]"]');
                     var valor = $('[name="valor[]"]');
                     $mesa_id=($('[name="mesa_id"]').val());
+                    $porpagar=($('[name="porpagar"]').val());
                     $pago=($('[name="pago"]').val());
                     $ppago=($('[name="ppago"]').val());
                     $troco=($('[name="troco"]').val());
+                  
 
                     var _fpagamento = [];
                     var _detalhes=[];
@@ -542,16 +546,15 @@
                         _valor.push($(valor).eq(i).val())
                         
                     }
-                    //alert(JSON.stringify(p));//or alert(p)
-                    //alert(_id+''+_quantidade+''+idbulk);   
-
+                
                 $.ajax({
                   url: "{{URL('efectuarpagamento')}}",
                   type:'POST',
-                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,pago:$pago,ppago:$ppago,troco:$troco},
+                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco},
 
                   success: function(data) {
                         $('.increment') .html(data);
+
 
                             //retornando total
                              var total=$('[name="total[]"]')
@@ -572,7 +575,12 @@
                     //alert(data);
 
 
-                }});
+                },
+
+                error: function(data){
+                    alert();
+                }
+                });
 
 
                 });
