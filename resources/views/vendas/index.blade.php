@@ -56,7 +56,8 @@
                 <div class="col-md-2">
                 <div class="pull-left" style="margin-left: 14px">
                    <div class="row">
-                    <a class="btn btn-primary col-md-4" href="{{ url()->previous() }}" style="width: 100%; margin-top: 10px"> Voltar</a>
+                    <a class="btn btn-primary col-md-4" href="{{ url()->previous() }}" style="width: 100%; margin-top: 10px; margin-right: 10px"> Voltar</a> 
+                    <a class="btn btn-danger col-md-4" href="#ticket-edit-mesa-modal" data-toggle="modal" data-target="#ticket-edit-mesa-modal" style="width: 100%; margin-top: 10px"> Finalizar<i class="fa fa-arrow-circle-right"></i></a>
                    </div> 
                 </div>
                 </div> 
@@ -88,20 +89,20 @@
                         @if ($data_mesa)
                             <?php foreach ($data_mesa as $key => $value): ?>
                              
-                                    <div class="row">
-                                 <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input type="text" name="produt" id="produt" style="margin-right: 13px; width: 40%; max-width: 60%" disabled="" value="{{$value->name}}"> <input  type="number" name="preco_final[]" id="preco_final[]" style="width: 60px; margin-right: 13px" disabled="true" value="{{$value->preco_final}}"><input  type="number" name="quantidade[]" id="quantidade[]" style="width: 67px;margin-right: 13px" value="{{$value->quantidade}}"><input  type="number" name="total[]" id="total[]" style="width: 75px; margin-right: 13px" disabled="" value="{{$value->quantidade * $value->preco_final}}">
-                                    </div>
+                                <div class="row">
+                                 <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input class="form-control" type="text" name="produt" id="produt" style="margin-right: 13px; width: 40%; max-width: 60%; margin-bottom: 5px" disabled="" value="{{$value->name}}"> <input class="form-control" type="number" name="preco_final[]" id="preco_final[]" style="width: 60px; margin-right: 13px; margin-bottom: 5px" disabled="true" value="{{$value->preco_final}}"><input class="form-control"  type="number" name="quantidade[]" id="quantidade[]" style="width: 67px;margin-right: 13px; margin-bottom: 5px" value="{{$value->quantidade}}"><input  class="form-control" type="number" name="total[]" id="total[]" style="width: 75px; margin-right: 13px; margin-bottom: 5px" disabled="" value="{{$value->quantidade * $value->preco_final}}">
+                                </div>
                                  
                             <?php endforeach ?>
 
                         @endif
                     </div>
                         <div style="margin-top: 10px">
-                            <label  style="margin-right: 9px;margin-left:58.5% ; width: 40px">Total:</label><input  type="number" name="sum" id="sum" style="width: 75px; margin-right: 13px" disabled="true" value="">
+                            <label  style="margin-right: 9px;margin-left:58.5% ; width: 40px">Total:</label><input class="total" type="number" name="sum" id="sum" style="width: 75px; margin-right: 13px" disabled="true" value="">
                         </div>
                 </div>
                 @if ($data_mesa)
-                <button type="submit" class="row btn btn-primary btn-block " style="margin-top: 10px; width: 40%; max-width: 60%">Atualizar</button>
+                <button type="submit" class="row btn btn-primary btn-block " style="margin-top: 10px; width: 40%; max-width: 60%;margin-bottom: 10px">Atualizar</button>
                 @endif
                 </form>
             </div>
@@ -109,6 +110,252 @@
 
             </div>
 
+            <!--modal edite Mesa-->
+        <div class="modal fade bd-example-modal-lg" id="ticket-edit-mesa-modal" tabindex="-1" role="dialog" aria-labelledby="ticket-edit-mesa-modal-Label">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" >
+                    <form method="POST" action="#" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data" id="formfvenda">
+                        {{ csrf_field() }}
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="ticket-edit-mesa-modal-Label">Finalização da Venda </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        
+                    </div> 
+
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="center-block"> 
+                                <h3> 
+                                Total a Pagar:
+                                <input class="form-control total"   type="number" name="porpagar" id="porpagar" style="width: auto;" disabled="true" value="">
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label>Forma de Pagamento</label>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Detalhes</label>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Referência</label>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Valor</label>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row" style="margin-right: 4px;margin-bottom: 3px">
+                                    <div class="col-md-3">
+                                        <input class="form-control "  type="text" name="fpagamento[]" value="Cash" disabled="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input  class="form-control " type="text" name="detalhes[]" value="Dinheiro" disabled="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="referencia[]" value="0" disabled="" >
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control valor"  type="number" name="valor[]" value="0" required="">
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-right: 4px;margin-bottom: 3px">
+                                    <div class="col-md-3">
+                                        <input class="form-control "  type="text" name="fpagamento[]" value="Cartão" disabled="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <select class="form-control " value=""  id="ticket_level"  name="ticket_level" autofocus >
+                                            <option disabled value selected>Select..</option>
+                                             
+                                            <option value="Milennium BIM">
+                                                Milennium BIM
+                                            </option>    
+                                            <option value="BancABC">
+                                                BancABC
+                                            </option>    
+                                            <option value="Barclays">
+                                                Barclays
+                                            </option>    
+                                            <option value="BCI">
+                                                BCI
+                                            </option>    
+                                            <option value="Nosso Banco">
+                                                Nosso Banco
+                                            </option>    
+                                            <option value="BNI">
+                                                BNI
+                                            </option>    
+                                            <option value="Ecobank">
+                                                Ecobank
+                                            </option>    
+                                            <option value="BancABC">
+                                                BancABC
+                                            </option>    
+                                            <option value="CEP">
+                                                CEP
+                                            </option>    
+                                            <option value="Unico">
+                                                Unico
+                                            </option>    
+                                            <option value="Gapi">
+                                                Gapi
+                                            </option>    
+                                            <option value="FNB">
+                                                FNB
+                                            </option>    
+                                            <option value="CapitalBanck">
+                                                CapitalBanck
+                                            </option>    
+                                            <option value="Moza Banco">
+                                                Moza Banco
+                                            </option>    
+                                            <option value="Standard Bank">
+                                                Standard Bank
+                                            </option>    
+                                            <option value="Societe Generale Moçambique">
+                                                Societe Generale Moçambique
+                                            </option> 
+
+                                             
+                                             
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="referencia[]" value="0"  >
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-right: 4px;margin-bottom: 3px">
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="fpagamento[]" value="M-PESA" disabled="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="detalhes[]" value="Vodacom" disabled="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="referencia[]" value="0" >
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-right: 4px;margin-bottom: 3px">
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="fpagamento[]" value="Conta Movel" disabled="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="detalhes[]" value="BCI" disabled="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="referencia[]" value="0"  >
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                    </div>
+                                </div>                  
+
+                                <div class="row" style="margin-right: 4px;margin-bottom: 3px">
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="fpagamento[]" value="Outro" disabled="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="detalhes[]" value="Outro" >
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="text" name="referencia[]" value="0"  >
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                    </div>
+                                </div>
+                                <hr>                 
+
+                                <div class="row" style="margin-right: 4px;margin-bottom: 3px">
+                                    <div class="col-md-6">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                       <label>Total Pago:</label>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="number" name="pago" id="pago" value="0" required="" disabled="">
+                                    </div>
+                                </div>           
+
+                                <div class="row" style="margin-right: 4px;margin-bottom: 3px">
+                                    <div class="col-md-6">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                       <label>Total Por pagar:</label>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control total" type="number" name="ppago" id="ppago" value="0" required="" disabled="">
+                                    </div>
+                                </div>           
+
+                                <div class="row" style="margin-right: 4px;margin-bottom: 3px">
+                                    <div class="col-md-6">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                       <label>Troco:</label>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input class="form-control " type="number" name="troco" id="troco" value="0" required="" disabled="">
+                                    </div>
+                                </div>
+                              <!-- Custom Tabs -->
+
+
+                              <!-- nav-tabs-custom -->
+                            </div>
+                            <!-- /.col -->
+
+                    </div>
+                          
+
+                            <div class="clearfix"></div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                                <input class="btn btn-primary" type="submit" value="Efectuar pagamento da conta">
+                                </div>
+                    </form>
+                        </div>
+                    </div>
+        </div> 
+    </div>
     
 
             <script>
@@ -137,7 +384,8 @@
                                 _total=parseFloat(__total)+parseFloat(_total);
                              }
                             //alert(parseFloat(_total))
-                                $("#sum").val(_total);
+                                $(".total").val(_total);
+
 
                         
 
@@ -197,7 +445,7 @@
                                 _total=parseFloat(__total)+parseFloat(_total);
                              }
                             //alert(parseFloat(_total))
-                                $("#sum").val(_total);
+                                $(".total").val(_total);
 
                         
 
@@ -226,12 +474,111 @@
                     _total=parseFloat(__total)+parseFloat(_total);
                  }
                 //alert(parseFloat(_total))
-                    $("#sum").val(_total);
+                    $(".total").val(_total);
                  });
 
                
 
             </script>
+
+            <script type="text/javascript">
+                
+            $(document).ready(function(){
+
+                $('.valor').change(function(){
+
+                     var total=$('[name="valor[]"]')
+                     var __total=[];
+                     var sum=0;
+                     var _total=0;
+
+                     for (var i=0;i<total.length;i++){
+                        __total=$(total).eq(i).val();
+                        _total=parseFloat(__total)+parseFloat(_total);
+                     }
+                    //alert(parseFloat(_total))
+                    $("#pago").val(_total);
+
+                    var porpagar=$('[name="porpagar"]').val();
+                    var realporpagar=parseFloat(porpagar)-parseFloat(_total);
+                    if (realporpagar<=0) {
+                        var troco=realporpagar;
+                        var realporpagar=0;
+                        $("#troco").val(troco);
+
+                    }
+
+
+                        $("#ppago").val(realporpagar);
+
+                    });
+            });
+            </script>
+
+            <script type="text/javascript">
+                //atualizando os dados na tabela temporaria 
+                $("#formfvenda").submit(function(e){
+                    e.preventDefault();
+
+                    var fpagamento = $('[name="fpagamento[]"]');
+                    var detalhes = $('[name="detalhes[]"]');
+                    var referencia = $('[name="referencia[]"]');
+                    var valor = $('[name="valor[]"]');
+                    $mesa_id=($('[name="mesa_id"]').val());
+                    $pago=($('[name="pago"]').val());
+                    $ppago=($('[name="ppago"]').val());
+                    $troco=($('[name="troco"]').val());
+
+                    var _fpagamento = [];
+                    var _detalhes=[];
+                    var _referencia = [];
+                    var _valor=[];
+
+
+                    for (var i = 0; i < fpagamento.length; i++) {
+                        _fpagamento.push($(fpagamento).eq(i).val());
+                        _detalhes.push($(detalhes).eq(i).val())
+                        _referencia.push($(referencia).eq(i).val());
+                        _valor.push($(valor).eq(i).val())
+                        
+                    }
+                    //alert(JSON.stringify(p));//or alert(p)
+                    //alert(_id+''+_quantidade+''+idbulk);   
+
+                $.ajax({
+                  url: "{{URL('efectuarpagamento')}}",
+                  type:'POST',
+                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,pago:$pago,ppago:$ppago,troco:$troco},
+
+                  success: function(data) {
+                        $('.increment') .html(data);
+
+                            //retornando total
+                             var total=$('[name="total[]"]')
+                             var __total=[];
+                             var sum=0;
+                             var _total=0;
+
+                             for (var i=0;i<total.length;i++){
+                                __total=$(total).eq(i).val();
+                                _total=parseFloat(__total)+parseFloat(_total);
+                             }
+                            //alert(parseFloat(_total))
+                                $(".total").val(_total);
+
+                        
+
+
+                    //alert(data);
+
+
+                }});
+
+
+                });
+            </script>
+
+
 
 
 
