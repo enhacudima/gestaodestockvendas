@@ -519,8 +519,13 @@
 
             <script type="text/javascript">
                 //add venda
+
+
+
+
                 $("#formfvenda").submit(function(e){
                     e.preventDefault();
+
 
                     var fpagamento = $('[name="fpagamento[]"]');
                     var detalhes = $('[name="detalhes[]"]');
@@ -546,6 +551,14 @@
                         _valor.push($(valor).eq(i).val())
                         
                     }
+
+
+                if (confirm("Tens a certeza que pretendes Efectuar o pagamento : " + $pago + "?"))
+                {   
+                 
+                if ($ppago==0) 
+                {
+                  
                 
                 $.ajax({
                   url: "{{URL('efectuarpagamento')}}",
@@ -553,6 +566,14 @@
                   data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco},
 
                   success: function(data) {
+                        //zerando os campos
+                        $porpagar=($('[name="porpagar"]').val(0));
+                        $pago=($('[name="pago"]').val(0));
+                        $ppago=($('[name="ppago"]').val(0));
+                        $troco=($('[name="troco"]').val(0));
+                        var referencia = $('[name="referencia[]"]').val(0);
+                        var valor = $('[name="valor[]"]').val(0);
+
                         $('.increment') .html(data);
 
 
@@ -569,6 +590,8 @@
                             //alert(parseFloat(_total))
                                 $(".total").val(_total);
 
+
+
                         
 
 
@@ -578,9 +601,15 @@
                 },
 
                 error: function(data){
-                    alert();
+                    alert("Atenção algo de errado com a sua requizição, contacte o administrador");
                 }
                 });
+                }else{
+                    alert("Verfica se o valor a pagar é igual a zerro (0)")
+
+                };//end if pago =0
+
+                }//end confirmation
 
 
                 });

@@ -180,6 +180,10 @@ class VendasController extends Controller
 	          		$ajuste->save();
           		}
 
+              $mesa=Mesa::find($mesa_id);
+              $mesa->status=1;
+              $mesa->save();
+
 
 
 
