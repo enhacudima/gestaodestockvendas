@@ -18,6 +18,8 @@
           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
           <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
           <script src="{{ asset('src/jquery.bootstrap-duallistbox.js') }}"></script>
+          <!--sweetalert-->
+          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
         <!--Ajax-->  
@@ -48,6 +50,7 @@
             <div class="">
                 <div class="center-block"><h2>Mesa: {{$mesa->name}}; Operador: {{ Auth::user()->name }}</h2> </div>
             </div>
+            <hr>
 
            
 
@@ -61,6 +64,7 @@
                    </div> 
                 </div>
                 </div> 
+                <hr>
             <div class="row">
             <div class="col-md-4" style="margin-top: 30px;margin-right: 40px">    
 
@@ -556,7 +560,7 @@
                 if (confirm("Tens a certeza que pretendes Efectuar o pagamento : " + $pago + "?"))
                 {   
                  
-                if ($ppago==0) 
+                if ($ppago==0 & $pago!=0) 
                 {
                   
                 
@@ -590,6 +594,8 @@
                             //alert(parseFloat(_total))
                                 $(".total").val(_total);
 
+                                swal("Pagamento Aceito com Sucesso!", "Você adicionou um pagamento", "success");
+
 
 
                         
@@ -605,7 +611,7 @@
                 }
                 });
                 }else{
-                    alert("Verfica se o valor a pagar é igual a zerro (0)")
+                    swal("Valores nõ aceites","Verfica se o valor a pagar é igual a zerro (0) ou o valor pago é diferente de zerro (0)", "error")
 
                 };//end if pago =0
 

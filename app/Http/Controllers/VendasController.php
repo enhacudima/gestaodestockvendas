@@ -114,6 +114,36 @@ class VendasController extends Controller
     	}
     }
 
+    public function listapedidos(Request $request)
+    {
+      if($request->ajax())
+      {
+        $request->except('_token'); 
+          $data=$request->all();
+
+          $output="";
+            $data_mesa=VendasTempMesa::where('mesa_id',$data['mesa_id'])->whereNull('codigo_venda')
+              ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
+              ->join('produtos','produtos_entradas.produto_id','produtos.id')
+              ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
+              ->orderBy('vendas_temp_mesa.created_at')
+              ->get();
+
+            foreach ($data_mesa as $key => $value) {
+              $output.=
+                       '<tr>
+                            <td>'.$value->name.'</td>
+                            <td>'.$value->preco_final.'</td>
+                            <td>'.$value->quantidade.'</td>
+                            <td>'.$value->quantidade * $value->preco_final.'</td>
+                        </tr>';
+            }
+
+             return response($output);
+      }
+    }
+
+
     public function efectuarpagamento(Request $request)
     {
     	if ($request->ajax()) 
