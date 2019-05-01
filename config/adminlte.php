@@ -58,7 +58,7 @@ return [
     |
     */
 
-    'layout' => null,
+    'layout' => 'fixed',
 
     /*
     |--------------------------------------------------------------------------
@@ -141,10 +141,6 @@ return [
                                                     'text' => 'Ajustes',
                                                     'url'  => 'ajust_index',
                                                 ],
-                                                [
-                                                    'text' => 'Reporte',
-                                                    'url'  => 'report_produt',
-                                                ],
                                             ],
                             ],
                             [
@@ -156,6 +152,38 @@ return [
                                                 ],
 
                                             ],
+                            ],
+                            [
+                                'text' => 'Reporte',
+                                'submenu'=>[
+                                            [
+                                             'text'=> 'Movimentos',
+                                             'url'  => 'report_produt',
+                                                    
+                                            ],
+                                            [ 
+                                                'text' => 'Vendas',
+                                                'submenu' =>[
+                                                                [
+                                                                 'text'=> 'Inflow',
+                                                                 'url'  => 'report_inflow',
+                                                                        
+                                                                ],                                          
+                                                                [
+                                                                 'text'=> 'Produtos',
+                                                                 'url'  => 'report_produto_venda',
+                                                                        
+                                                                ],  
+                                                                [
+                                                                 'text'=> 'Auditar',
+                                                                 'url'  => 'report_auditar',
+                                                                        
+                                                                ],                       
+
+                                                            ]
+
+                                            ]                                          
+                                           ]
                             ],
                             [
                                 'text' => 'Configurações',

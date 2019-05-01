@@ -43,20 +43,20 @@
             <div class="row">
                     <div class="from-group col-lg-12">
                         <label>Quantidade</label>
-                        <input type="number" name="quantidade" id="quantidade" class="form-control" value="{{old('quantidade')}}" required autofocus>
+                        <input step="0.01" type="number" name="quantidade" id="quantidade" class="form-control" value="{{old('quantidade')}}" required autofocus>
                     </div>
             </div> 
             <div class="row">
                     <div class="from-group col-lg-12">
                         <label>Preço de Compra</label>
-                        <input type="number" name="precodecompra" id="precodecompra" class="form-control" value="{{old('precodecompra')}}"  autofocus>
+                        <input step="0.01"  type="number" name="precodecompra" id="precodecompra" class="form-control" value="{{old('precodecompra')}}"  autofocus>
                     </div>
             </div> 
 
             <div class="row">
                     <div class="from-group col-lg-12">
                         <label>Margem (%)</label>
-                        <input type="number" name="margem_per" id="margem_per" class="form-control" value="{{old('margem_per')}}" required autofocus>
+                        <input step="0.01" type="number" name="margem_per" id="margem_per" class="form-control" value="{{old('margem_per')}}" required autofocus>
                     </div>
             </div>       
 
@@ -122,9 +122,9 @@
                  <td>{{$cil->precodecompra}} Mt</td>
                  <td>{{$cil->margem_per}} %</td>
                  <td>{{$cil->quantidade_unitaria}}</td>
-                 <td>{{$cil->custo_unitario}} Mt</td>
-                 <td>{{$cil->margem}} Mt</td>
-                 <td>{{$cil->preco_final}} Mt</td>
+                 <td>{{number_format($cil->custo_unitario, 2, ".", "")}} Mt</td>
+                 <td>{{number_format($cil->margem, 2, ".", "")}} Mt</td>
+                 <td>{{number_format($cil->preco_final, 2, ".", "")}} Mt</td>
                  <td>{{$cil->created_at}}</td>
                  <td>{{$cil->updated_at}}</td>
                  @if ($cil->status==0)

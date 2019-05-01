@@ -96,12 +96,17 @@
                                       <tbody>
  
                                       </tbody>
-                                    </table>
-     
+                                      <tfoot>
+                                          <tr>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td><div class="col-md-4"><input type="text" id="grdtot" class="grdtot form-control" value="0" name="" disabled="" /></div></td>
+                                          </tr>
+                                      </tfoot>
+                                  </table>
                                   </div>
-                                  <div style="margin-top: 10px">
-                                      <label  style="margin-right: 9px;margin-left:58.5% ; width: 40px">Total:</label><input class="total" type="number" name="sum" id="sum" style="width: 75px; margin-right: 13px" disabled="true" value="">
-                                  </div>
+
 
                                   </div>
                                   <!-- /.tab-pane -->
@@ -151,25 +156,31 @@
                   data: {mesa_id:$value},
 
                   success: function(data) {
-                        $('.increment') .html(data);
+                        $('#example>tbody') .html(data);
+
 
                             //retornando total
-                             var total=$('[name="total[]"]')
-                             var __total=[];
-                             var sum=0;
-                             var _total=0;
+                      if (data) {
 
-                             for (var i=0;i<total.length;i++){
-                                __total=$(total).eq(i).val();
-                                _total=parseFloat(__total)+parseFloat(_total);
-                             }
-                            //alert(parseFloat(_total))
-                                $("#example>tbody").val(_total);
+                      var $tblrows = $("#example tbody tr");
+                        $tblrows.each(function (index) {
+                            var $tblrow = $(this);
 
-                        
+                            $tblrow.find('.subtot').val
 
+                               var grandTotal = 0;
+                                $(".subtot").each(function () {
+                                    var stval = parseFloat($(this).val());
+                                    grandTotal += isNaN(stval) ? 0 : stval;
+                                });
 
-                    //alert(data);
+                       
+                              $('.grdtot').val(grandTotal.toFixed(2));
+                         
+                        });
+                      } else{
+                        $('.grdtot').val(0)
+                      }     
 
 
                 }});

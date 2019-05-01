@@ -200,19 +200,7 @@ class ProdutoController extends Controller
 
         return back()->with('success','Successfully Added');
     }
-    public function report()
-    {   
-        $movimentos=DB::table('produtos_entradas_view')
-                            ->join('produtos','produtos_entradas_view.id','produtos.id')
-                            ->leftjoin('produtos_ajustes_view','produtos_entradas_view.entrada_lot','produtos_ajustes_view.lot')
-                            ->select('produtos.id','produtos.name','produtos_entradas_view.entrada_lot','produtos_ajustes_view.lot','produtos_entradas_view.entrada_preco',DB::raw('Sum(produtos_ajustes_view.total_ajuste) as total_ajuste '),
-                                    DB::raw('Sum(produtos_entradas_view.total_entrada) as total_entrada'))
-                            ->groupby('produtos_ajustes_view.lot','produtos.name','produtos.id','produtos_entradas_view.entrada_lot','entrada_preco')
-                            ->get();
-                     
-                            
-        return view('admin.Produtos.report',compact('movimentos'));
-    }
+
 
     public function lotshow($id)
     {   

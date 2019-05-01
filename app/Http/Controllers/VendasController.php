@@ -135,7 +135,7 @@ class VendasController extends Controller
                             <td>'.$value->name.'</td>
                             <td>'.$value->preco_final.'</td>
                             <td>'.$value->quantidade.'</td>
-                            <td>'.$value->quantidade * $value->preco_final.'</td>
+                            <td>'.'<div class="col-md-4"><input type="text" class="subtot form-control" value="'.$value->quantidade * $value->preco_final.'" name="subtot" disabled="" /></div>'.'</td>
                         </tr>';
             }
 

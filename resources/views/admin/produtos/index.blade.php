@@ -69,7 +69,7 @@
             <div class="row">
                     <div class="from-group col-lg-12">
                         <label>Unidade de Medida</label>
-                        <input type="number" name="unidadedemedida" id="unidadedemedida" class="form-control" value="{{old('unidadedemedida')}}" >
+                        <input step="0.01" type="number" name="unidadedemedida" id="unidadedemedida" class="form-control" value="{{old('unidadedemedida')}}" >
                     </div>
             </div> 
 
@@ -144,8 +144,57 @@
 </div>
 @stop
 
+@section('js')
+
+<script src="//cdn.datatables.net/v/bs/dt-1.10.18/datatables.min.js"></script>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.colVis.min.js"></script>
+
+
+    <script>
+         
+    $(document).ready(function() {
+        $('#reclatodas').DataTable( {
+            columnDefs: [
+                {
+                    targets: [ 0, 1, 2 ],
+                    className: 'mdl-data-table__cell--non-numeric'
+                }
+            ],
+            "order": [[ 0, "desc" ]],
+            responsive: true,
+            dom: 'lfBrtip',
+            buttons: [
+                'excel', 'print'
+            ],
+
+        } );
+    } );
+    </script>
+
+
+@stop
+
 @section('css')
-               <style>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css"> 
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.material.min.css">   
+
+        <style type="text/css">
+            .dataTables_wrapper .dt-buttons {
+          float:none;  
+          text-align:center;
+          margin-bottom: 30px;
+        }
+        </style>
+
+          <style>
 
 
         input, textarea {

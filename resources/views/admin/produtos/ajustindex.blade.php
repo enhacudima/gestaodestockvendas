@@ -23,14 +23,15 @@
     </div>
 
     <div class="panel-body">
-        <div class="col-lg-7">
+        <div class="col-lg-4">
         <form method="post" action="{{{url('store_produto_ajuste')}}}" autocomplete="Active" accept-charset="UTF-8" >
             {{ csrf_field() }}
 
             <input   name="idusuario" type="hidden" id="idusuario" value="{{ Auth::user()->id }}" required autofocus>
             <input   name="tipo" type="hidden" id="tipo" value="ajuste" required autofocus>
             <div class="row">
-                    <div class="from-group col-lg-5">
+                <div class="row">
+                    <div class="from-group col-lg-12">
                         <label>Produto</label>
                         <select name="produto_id" id="produto_id" class="form-control" value="{{old('produto')}}" required autofocus>
                             <option disabled selected ></option>
@@ -41,29 +42,38 @@
                             @endif
                         </select>
                     </div>
-                    <div class="from-group col-lg-3">
+                    
+                </div>
+                <div class="row">
+                    
+                    <div class="from-group col-lg-6">
                         <label>lot</label>
                         <select name="lot_id" id="lot_id" class="form-control" value="{{old('lot_id')}}" required autofocus>
                         </select>
                     </div>
-                    <div class="from-group col-lg-2">
+                    <div class="from-group col-lg-6">
                         <label>Quantidade unit</label>
-                        <input type="number" name="quantidade_unidade" id="quantidade_unidade" class="form-control" value="{{old('quantidade_unidade')}}" required autofocus>
+                        <input step="0.01" type="number" name="quantidade_unidade" id="quantidade_unidade" class="form-control" value="{{old('quantidade_unidade')}}" required autofocus>
                     </div>
-                    <div class="from-group col-lg-2">
+                </div>
+
+                <div class="row">
+                    
+                    <div class="from-group col-lg-12">
                         <label>Descrição</label>
                         <textarea type="textarea" name="decricao" id="decricao" class="form-control" value="{{old('decricao')}}"  autofocus></textarea>
                     </div>
-            </div> 
-            
-
+                </div>
             <div class="row">
 
-                <div class="from-group text-right col-md-12">
+                <div class=" col-lg-12">
                      <label></label>
                     <input class="btn btn-primary" type="submit" value="Submit">
                 </div>
             </div>   
+            </div> 
+            
+
                 
            
         </form>
@@ -72,7 +82,7 @@
     </div>
     
 
-    <div class="col-lg-5">
+    <div class="col-lg-8">
     <div class="panel panel-default">
 
     <div class="panel-heading">
@@ -123,6 +133,41 @@
 </div>
 
 @section('js')
+
+<script src="//cdn.datatables.net/v/bs/dt-1.10.18/datatables.min.js"></script>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.colVis.min.js"></script>
+
+
+    <script>
+         
+    $(document).ready(function() {
+        $('#movimentos').DataTable( {
+            columnDefs: [
+                {
+                    targets: [ 0, 1, 2 ],
+                    className: 'mdl-data-table__cell--non-numeric'
+                }
+            ],
+            "order": [[ 0, "desc" ]],
+            responsive: true,
+            dom: 'lfBrtip',
+            buttons: [
+                'excel', 'print'
+            ],
+
+        } );
+    } );
+    </script>
+
+
 
 <script type="text/javascript">
     $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
@@ -182,5 +227,19 @@
         }
 
        </style>
+
+               <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css"> 
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.material.min.css">   
+
+        <style type="text/css">
+            .dataTables_wrapper .dt-buttons {
+          float:none;  
+          text-align:center;
+          margin-bottom: 30px;
+        }
+        </style>
+
 @stop
 @stop
+
+

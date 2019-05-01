@@ -44,7 +44,6 @@ Route::get('produto_entrada','ProdutoController@entradaindex');
 Route::post('store_produto_entrada','ProdutoController@entradastore');
 Route::get('ajust_index','ProdutoController@ajustindex');
 Route::post('store_produto_ajuste','ProdutoController@ajustestore');
-Route::get('report_produt','ProdutoController@report');
 Route::get('show_produto_entrada/{id}','ProdutoController@lotshow');
 Route::post('produto/entrada/update','ProdutoController@loteupdate');
 //obter lot_id
@@ -56,4 +55,15 @@ Route::get('getmesatem','VendasController@getmesatem');
 Route::post('atualizarvendatemp','VendasController@atualizarvendatemp');
 Route::post('efectuarpagamento','VendasController@efectuarpagamento');
 Route::get('listapedidos','VendasController@listapedidos');
+
+
+// relatorios 
+Route::get('report_produt','ReportController@reportMovimento');
+Route::post('report_movimetos_filter','ReportController@reportMovimentoFilter');
+Route::post('report_inflow_filter','ReportController@reportInflowFilter');
+Route::post('report_produto_venda_filter','ReportController@reportProdutoVendaFilter');
+Route::post('report_auditar_filter','ReportController@reportAuditarFilter');
+Route::get('report_inflow','ReportController@reportInflow');
+Route::get('report_produto_venda','ReportController@reportProdutoVenda');
+Route::get('report_auditar','ReportController@reportAuditar');
 
