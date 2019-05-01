@@ -72,7 +72,7 @@
         
                 <hr>
             <div class="row">
-            <div class="col-md-6" style="margin-top: 30px;margin-right: 40px">    
+            <div class="col-md-5" style="margin-top: 30px;margin-right: 40px">    
 
               <form id="demoform" action="#" method="post">
                  {{ csrf_field() }}
@@ -87,7 +87,7 @@
               </form>
             </div>
 
-            <div class="col-md-5" style="margin-top: 55px">
+            <div class="col-md-6" style="margin-top: 55px">
                 <h3>Carrinho</h3>
                 <div class="row">
                 <form id="carrinhoform" action="#" method="POST">
@@ -109,7 +109,7 @@
                                     @if(isset($data_mesa))  
                                     @foreach($data_mesa as $key => $value)
                                         <tr>
-                                        <td> <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input step="0.01" type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input class="form-control" type="text" name="produt" id="produt"  disabled="" value="{{$value->name}}"></td> 
+                                        <td style="width: 400px"> <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input step="0.01" type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input class="form-control" type="text" name="produt" id="produt"  disabled="" value="{{$value->name}}"></td> 
                                         <td><input class="form-control" step="0.01" type="number" name="preco_final[]" id="preco_final[]" disabled="true" value="{{$value->preco_final}}"></td> 
                                         <td><input class="form-control" step="0.01" type="number" name="quantidade[]" id="quantidade[]"  value="{{$value->quantidade}}"></td> 
                                         <td><input  class="form-control" step="0.01" type="number" name="total[]" id="total[]"  disabled="" value="{{$value->quantidade * $value->preco_final}}"></td>
