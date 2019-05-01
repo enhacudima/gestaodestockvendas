@@ -96,7 +96,7 @@
                  @if($cil->status==1)
                         Livre
                  @else
-                    <a class="btn btn btn-success btn-xs" href="{{action('MesaController@show', $cil->id)}}">
+                    <a class="btn btn btn-success btn-xs" href="{{action('VendasController@index', $cil->id)}}">
                          Ocupada
                     </a>
                  @endif

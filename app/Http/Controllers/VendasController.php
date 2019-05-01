@@ -48,7 +48,18 @@ class VendasController extends Controller
 
          
           	foreach ($data['dados'] as $key => $value) {
-          		$user_id = (!Auth::guest()) ? Auth::user()->id : null ;//user_id	          	
+             //verficando duplicados  
+            $duplicate=VendasTempMesa::where('produto_id',$value)
+                                      ->where('mesa_id',$data['mesa_id'])
+                                      ->whereNull('codigo_venda')
+                                      ->first();
+            if ($duplicate) {
+              $quantidadeNova=$duplicate->quantidade+1;
+              $duplicate->update(['quantidade'=> $quantidadeNova,
+
+              ]);
+            }else{
+          	$user_id = (!Auth::guest()) ? Auth::user()->id : null ;//user_id	          	
 	      		$produtos=new VendasTempMesa();
 	      		$produtos->user_id=$user_id;
 	      		$produtos->produto_id=$value;
@@ -56,6 +67,9 @@ class VendasController extends Controller
 	      		$produtos->identificador_de_bulk=$identificador_de_bulk;
 	      		$produtos->mesa_id=$data['mesa_id'];
 	      		$produtos->save();
+            }  
+
+
           	}
 
           	$output="";
@@ -68,7 +82,19 @@ class VendasController extends Controller
 
           	foreach ($data_mesa as $key => $value) {
           		$output.=
-          			'<div class="row"><input type="text" id="idbulk" name="idbulk" hidden="true" value="'.$value->identificador_de_bulk.'"><input type="number" id="id[]" name="id[]" hidden="true" value="'.$value->id.'"><input class="form-control" type="text" name="produt" id="produt" style="margin-right: 13px; margin-bottom: 5px;  width: 40%; max-width: 60%" disabled="" value="'.$value->name.'"> <input class="form-control" type="number" name="preco_final[]" id="preco_final[]" style="width: 60px; margin-right: 13px; margin-bottom: 5px" disabled="true" value="'.$value->preco_final.'"><input class="form-control" type="number" name="quantidade[]" id="quantidade[]" style="width: 67px;margin-right: 13px; margin-bottom: 5px" value="'.$value->quantidade.'"><input class="form-control" type="number" name="total[]" id="total[]" style="width: 75px; margin-right: 13px; margin-bottom: 5px"  disabled="true"  value="'.$value->quantidade * $value->preco_final.'"></div>';	
+              '
+                <tr>
+                  <td> <input type="text" id="idbulk" name="idbulk" hidden="true" value="'.$value->identificador_de_bulk.'"><input step="0.01" type="number" id="id[]" name="id[]" hidden="true" value="'.$value->id.'"><input class="form-control" type="text" name="produt" id="produt"  disabled="" value="'.$value->name.'"></td> 
+                  <td><input class="form-control" step="0.01" type="number" name="preco_final[]" id="preco_final[]" disabled="true" value="'.$value->preco_final.'"></td> 
+                  <td><input class="form-control" step="0.01" type="number" name="quantidade[]" id="quantidade[]"  value="'.$value->quantidade.'"></td> 
+                  <td><input  class="form-control" step="0.01" type="number" name="total[]" id="total[]"  disabled="" value="'.$value->quantidade * $value->preco_final.'"></td>
+                  <td><a type="submit"class="btn btn-danger btn-xs"  data-value="'.$value->id.'" id="delete" href="#">
+                    <i class="fa fa-trash-o fa-lg" ></i> Delete </a>
+                  </td>
+
+                </tr>
+
+              ';	
           	}
           	
 
@@ -107,7 +133,19 @@ class VendasController extends Controller
 
           	foreach ($data_mesa as $key => $value) {
           		$output.=
-          			'<div class="row"><input type="text" id="idbulk" name="idbulk" hidden="true" value="'.$value->identificador_de_bulk.'"><input type="number" id="id[]" name="id[]" hidden="true" value="'.$value->id.'"><input class="form-control" type="text" name="produt" id="produt" style="margin-right: 13px; margin-bottom: 5px;  width: 40%; max-width: 60%" disabled="" value="'.$value->name.'"> <input class="form-control" type="number" name="preco_final[]" id="preco_final[]" style="width: 60px; margin-right: 13px; margin-bottom: 5px" disabled="true" value="'.$value->preco_final.'"><input class="form-control" type="number" name="quantidade[]" id="quantidade[]" style="width: 67px;margin-right: 13px; margin-bottom: 5px" value="'.$value->quantidade.'"><input class="form-control" type="number" name="total[]" id="total[]" style="width: 75px; margin-right: 13px; margin-bottom: 5px"  disabled="true"  value="'.$value->quantidade * $value->preco_final.'"></div>';
+          			              '
+                <tr>
+                  <td> <input type="text" id="idbulk" name="idbulk" hidden="true" value="'.$value->identificador_de_bulk.'"><input step="0.01" type="number" id="id[]" name="id[]" hidden="true" value="'.$value->id.'"><input class="form-control" type="text" name="produt" id="produt"  disabled="" value="'.$value->name.'"></td> 
+                  <td><input class="form-control" step="0.01" type="number" name="preco_final[]" id="preco_final[]" disabled="true" value="'.$value->preco_final.'"></td> 
+                  <td><input class="form-control" step="0.01" type="number" name="quantidade[]" id="quantidade[]"  value="'.$value->quantidade.'"></td> 
+                  <td><input  class="form-control" step="0.01" type="number" name="total[]" id="total[]"  disabled="" value="'.$value->quantidade * $value->preco_final.'"></td>
+                  <td><a type="submit"class="btn btn-danger btn-xs"  data-value="'.$value->id.'" id="delete" href="#">
+                    <i class="fa fa-trash-o fa-lg" ></i> Delete </a>
+                  </td>
+
+                </tr>
+
+              ';
           	}
 
           	 return response($output);
@@ -220,6 +258,54 @@ class VendasController extends Controller
 
     		
     	}
+    }
+
+
+    public function  apagalinha(Request $request)
+    {
+      if($request->ajax())
+        {
+          $request->except('_token'); 
+          $data=$request->all();
+
+
+          $identificador_de_bulk='mesa'.'_'.time();
+          $linha_id=$data['linha_id'];
+          $mesa_id=VendasTempMesa::find($linha_id);
+
+          VendasTempMesa::where('id',$linha_id)->delete();
+
+
+            $output="";
+            $data_mesa=VendasTempMesa::where('mesa_id',$mesa_id->mesa_id)->whereNull('codigo_venda')
+              ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
+              ->join('produtos','produtos_entradas.produto_id','produtos.id')
+              ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
+              ->orderBy('vendas_temp_mesa.created_at')
+              ->get();
+
+            foreach ($data_mesa as $key => $value) {
+              $output.=
+              '
+                <tr>
+                  <td> <input type="text" id="idbulk" name="idbulk" hidden="true" value="'.$value->identificador_de_bulk.'"><input step="0.01" type="number" id="id[]" name="id[]" hidden="true" value="'.$value->id.'"><input class="form-control" type="text" name="produt" id="produt"  disabled="" value="'.$value->name.'"></td> 
+                  <td><input class="form-control" step="0.01" type="number" name="preco_final[]" id="preco_final[]" disabled="true" value="'.$value->preco_final.'"></td> 
+                  <td><input class="form-control" step="0.01" type="number" name="quantidade[]" id="quantidade[]"  value="'.$value->quantidade.'"></td> 
+                  <td><input  class="form-control" step="0.01" type="number" name="total[]" id="total[]"  disabled="" value="'.$value->quantidade * $value->preco_final.'"></td>
+                  <td><a type="submit"class="btn btn-danger btn-xs"  data-value="'.$value->id.'" id="delete" href="#">
+                    <i class="fa fa-trash-o fa-lg" ></i> Delete </a>
+                  </td>
+
+                </tr>
+
+              ';  
+            }
+            
+
+          
+
+          return response($output);
+        }
     }
 
 }

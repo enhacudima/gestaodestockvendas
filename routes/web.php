@@ -67,3 +67,7 @@ Route::get('report_inflow','ReportController@reportInflow');
 Route::get('report_produto_venda','ReportController@reportProdutoVenda');
 Route::get('report_auditar','ReportController@reportAuditar');
 
+
+Route::post('apagalinha','VendasController@apagalinha');
+
+

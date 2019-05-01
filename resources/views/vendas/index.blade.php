@@ -9,6 +9,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
           <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
@@ -56,17 +57,22 @@
 
 
             <div class="col-md-12">
-                <div class="col-md-2">
-                <div class="pull-left" style="margin-left: 14px">
-                   <div class="row">
-                    <a class="btn btn-primary col-md-4" href="{{ url()->previous() }}" style="width: 100%; margin-top: 10px; margin-right: 10px"> Voltar</a> 
-                    <a class="btn btn-danger col-md-4" href="#ticket-edit-mesa-modal" data-toggle="modal" data-target="#ticket-edit-mesa-modal" style="width: 100%; margin-top: 10px"> Finalizar<i class="fa fa-arrow-circle-right"></i></a>
+
+                   <div class="row col-md-5">
+                    <div class="col-md-6">
+                    <a class="btn btn-primary " href="{{ url()->previous() }}" style="width: 100%;  margin-right: 10px"> Voltar</a> 
+                        
+                    </div>
+                    <div class="col-md-6">
+                    <a class="btn btn-danger " href="#ticket-edit-mesa-modal" data-toggle="modal" data-target="#ticket-edit-mesa-modal" style="width: 100%;"> Finalizar <i class="fa fa-arrow-circle-right"></i></a>
+                        
+                    </div>
                    </div> 
-                </div>
-                </div> 
+            
+        
                 <hr>
             <div class="row">
-            <div class="col-md-4" style="margin-top: 30px;margin-right: 40px">    
+            <div class="col-md-6" style="margin-top: 30px;margin-right: 40px">    
 
               <form id="demoform" action="#" method="post">
                  {{ csrf_field() }}
@@ -81,32 +87,57 @@
               </form>
             </div>
 
-            <div class="col-md-4" style="margin-top: 55px">
+            <div class="col-md-5" style="margin-top: 55px">
                 <h3>Carrinho</h3>
                 <div class="row">
-                    <label style="margin-right: 13px; width: 40%; max-width: 60%">Descrição do Produto</label><label style="width: 67px">Preço.(Mtn)</label><label style="width: 80px">Qua.t</label><label style="width: 75px">Total.(Mtn)</label>
-                </div>
                 <form id="carrinhoform" action="#" method="POST">
                     {{ csrf_field() }}
-                <div class="">
-                    <div class="increment">
-                        @if ($data_mesa)
-                            <?php foreach ($data_mesa as $key => $value): ?>
-                             
-                                <div class="row">
-                                 <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input class="form-control" type="text" name="produt" id="produt" style="margin-right: 13px; width: 40%; max-width: 60%; margin-bottom: 5px" disabled="" value="{{$value->name}}"> <input class="form-control" type="number" name="preco_final[]" id="preco_final[]" style="width: 60px; margin-right: 13px; margin-bottom: 5px" disabled="true" value="{{$value->preco_final}}"><input class="form-control"  type="number" name="quantidade[]" id="quantidade[]" style="width: 67px;margin-right: 13px; margin-bottom: 5px" value="{{$value->quantidade}}"><input  class="form-control" type="number" name="total[]" id="total[]" style="width: 75px; margin-right: 13px; margin-bottom: 5px" disabled="" value="{{$value->quantidade * $value->preco_final}}">
-                                </div>
-                                 
-                            <?php endforeach ?>
+                        <div class="panel-body">
 
-                        @endif
-                    </div>
-                        <div style="margin-top: 10px">
-                            <label  style="margin-right: 9px;margin-left:58.5% ; width: 40px">Total:</label><input class="total" type="number" name="sum" id="sum" style="width: 75px; margin-right: 13px" disabled="true" value="">
-                        </div>
-                </div>
+                            <div class="box-body table-responsive no-padding">     
+                                <table id="reclatodas" class="table table-striped  table-hover" cellspacing="0" width="100%">
+                                    <thead >
+                                    <tr>
+                                        <th scope="col">Descrição do Produto</th>
+                                        <th scope="col">Preço.(Mtn)</th>
+                                        <th scope="col">Qua.t</th>
+                                        <th scope="col">Total.(Mtn)</th>
+                                        <th scope="col">Apagar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @if(isset($data_mesa))  
+                                    @foreach($data_mesa as $key => $value)
+                                        <tr>
+                                        <td> <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input step="0.01" type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input class="form-control" type="text" name="produt" id="produt"  disabled="" value="{{$value->name}}"></td> 
+                                        <td><input class="form-control" step="0.01" type="number" name="preco_final[]" id="preco_final[]" disabled="true" value="{{$value->preco_final}}"></td> 
+                                        <td><input class="form-control" step="0.01" type="number" name="quantidade[]" id="quantidade[]"  value="{{$value->quantidade}}"></td> 
+                                        <td><input  class="form-control" step="0.01" type="number" name="total[]" id="total[]"  disabled="" value="{{$value->quantidade * $value->preco_final}}"></td>
+                                        <td><a type="submit"class="btn btn-danger btn-xs"  data-value="{{$value->id}}" id="delete" href="#">
+                                                <i class="fa fa-trash-o fa-lg" ></i> Delete
+                                            </a>
+                                        </td>
+
+
+                                        </tr>
+                                    @endforeach 
+
+                                    @endif   
+                                    </tbody>
+                                        <tfoot>
+                                          <tr>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td><div class=""><input type="text"  class="total form-control" value="0" name="sum" id="sum" disabled="" /></div></td>
+                                          </tr>
+                                      </tfoot>
+                                </table>
+                            </div>    
+                            </div>
+
                 @if ($data_mesa)
-                <button type="submit" class="row btn btn-primary btn-block " style="margin-top: 10px; width: 40%; max-width: 60%;margin-bottom: 10px">Atualizar</button>
+                <button type="submit" class="row btn btn-primary btn-block " style="margin-top: 10px; width: 40%; max-width: 60%;margin-bottom: 10px">Atualizar <i class="fa fa-recycle" aria-hidden="true"></i></button>
                 @endif
                 </form>
             </div>
@@ -379,7 +410,8 @@
                   type:'POST',
                   data: {dados:$dados,mesa_id:$mesa_id},
                   success: function(data) {
-                        $('.increment') .html(data);
+                        $('#reclatodas > tbody') .html(data);
+
                              var total=$('[name="total[]"]')
                              var __total=[];
                              var sum=0;
@@ -438,7 +470,7 @@
                   data: {idbulk:$idbulk,mesa_id:$mesa_id,id:_id,quantidade:_quantidade},
 
                   success: function(data) {
-                        $('.increment') .html(data);
+                        $('#reclatodas > tbody') .html(data);
 
                             //retornando total
                              var total=$('[name="total[]"]')
@@ -578,7 +610,7 @@
                         var referencia = $('[name="referencia[]"]').val(0);
                         var valor = $('[name="valor[]"]').val(0);
 
-                        $('.increment') .html(data);
+                        $('#reclatodas > tbody') .html(data);
 
 
                             //retornando total
@@ -611,7 +643,7 @@
                 }
                 });
                 }else{
-                    swal("Valores nõ aceites","Verfica se o valor a pagar é igual a zerro (0) ou o valor pago é diferente de zerro (0)", "error")
+                    swal("Valores não aceites","Verfica se o valor a pagar é igual a zerro (0) ou o valor pago é diferente de zerro (0)", "error")
 
                 };//end if pago =0
 
@@ -621,7 +653,48 @@
                 });
             </script>
 
+            <script type="text/javascript">
+            $(document).on('click', '#delete',(function() {//using delegaction to send event on dynamic datatable
 
+
+                    $value=$(this).data("value");
+                    //alert($value);
+                    console.log($value);
+                if (confirm("Clique 'Ok' para continuar"))
+                {
+                  $.ajax({
+                  url: "{{URL('apagalinha')}}",
+                  type:'post',
+                  data: {linha_id:$value},
+
+                  success: function(data) {
+                    $('#reclatodas > tbody') .html(data);
+
+
+                            //retornando total
+                             var total=$('[name="total[]"]')
+                             var __total=[];
+                             var sum=0;
+                             var _total=0;
+
+                             for (var i=0;i<total.length;i++){
+                                __total=$(total).eq(i).val();
+                                _total=parseFloat(__total)+parseFloat(_total);
+                             }
+                            //alert(parseFloat(_total))
+                                $(".total").val(_total);
+                       
+
+
+                }}
+                );
+
+                }    
+
+
+                
+            }));
+            </script>
 
 
 
