@@ -20,9 +20,21 @@
             <div class="small-box bg-blue">
               <div class="inner">
                 @if($cil->status==0)
-                <h3 style="" ><a  href="{{url('vendasindex',$cil->id)}}" style="color: red">{{$cil->name}}</a></h3>
+                
+                  @if($cil->description=="car")
+                  <h3 style="" ><a  href="{{url('carindex',$cil->id)}}" style="color: red">{{$cil->name}}</a></h3>
+                  @else
+                  <h3 style="" ><a  href="{{url('vendasindex',$cil->id)}}" style="color: red">{{$cil->name}}</a></h3>
+                  @endif
+                  
                 @else
-                <h3><a  href="{{url('vendasindex',$cil->id)}}" style="color: #FFFFFF">{{$cil->name}}</a></h3>
+
+                  @if($cil->description=="car")
+                  <h3><a  href="{{url('carindex',$cil->id)}}" style="color: #FFFFFF">{{$cil->name}}</a></h3>
+                  @else
+                  <h3><a  href="{{url('vendasindex',$cil->id)}}" style="color: #FFFFFF">{{$cil->name}}</a></h3>
+                  @endif  
+                                  
                 @endif
                 <p>{{$cil->username}}</p>
                 <p>{{$cil->updated_at->diffForHumans()}}</p>

@@ -54,7 +54,10 @@ Route::get('saveselection','VendasController@saveselection');
 Route::get('getmesatem','VendasController@getmesatem');
 Route::post('atualizarvendatemp','VendasController@atualizarvendatemp');
 Route::post('efectuarpagamento','VendasController@efectuarpagamento');
+Route::post('efectuarcredito','VendasController@efectuarcredito');
 Route::get('listapedidos','VendasController@listapedidos');
+Route::get('creditarvenda','VendasController@creditarvenda');
+Route::post('savecredito','VendasController@savecredito');
 
 
 // relatorios 
@@ -68,6 +71,25 @@ Route::get('report_produto_venda','ReportController@reportProdutoVenda');
 Route::get('report_auditar','ReportController@reportAuditar');
 
 
+
 Route::post('apagalinha','VendasController@apagalinha');
+
+//car wash
+Route::get('carindex/{id}','CarController@carindex');
+Route::get('carcreate/{id}','CarController@carcreate');
+Route::get('carshow/{id}/{mesa_id}','CarController@carshow');
+Route::post('storcar','CarController@storcar');
+Route::post('atualizar','CarController@atualizar');
+Route::get('carshow/{id}/{mesa_id}','CarController@carshow');
+Route::get('cartemp/{id}/{mesa_id}/{user_id}','CarController@cartemp');
+
+Route::post('carapagalinha','CarController@carapagalinha');
+
+//Cliente 
+Route::get('index_cliente','ClienteController@indexcliente');
+Route::post('storcliente','ClienteController@storcliente');
+Route::get('clienteshow/{id}','ClienteController@clienteshow');
+Route::post('updatecliente','ClienteController@updatecliente');
+Route::get('searchcliente','ClienteController@searchcliente')->name('searchloanid');
 
 

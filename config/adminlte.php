@@ -186,6 +186,14 @@ return [
                                            ]
                             ],
                             [
+                                'text' => 'Clientes',
+                                'submenu'=> [
+                                                [
+                                                    'text'=>'Criar Cliente',
+                                                    'url' =>'index_cliente',
+                                                ]    
+                                            ]
+                            ],                            [
                                 'text' => 'Configurações',
                                 'url'  => 'admin',
                             ],

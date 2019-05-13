@@ -7,6 +7,8 @@
 
         <title>Bmdevendas|Vendas</title>
 
+
+
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -21,6 +23,15 @@
           <script src="{{ asset('src/jquery.bootstrap-duallistbox.js') }}"></script>
           <!--sweetalert-->
           <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+          <!--jquery para autocomplet--> 
+
+
+            
+            <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+            <!--and js-->
+
 
 
         <!--Ajax-->  
@@ -58,15 +69,16 @@
 
             <div class="col-md-12">
 
-                   <div class="row col-md-5">
-                    <div class="col-md-6">
+                   <div class="row col-md-12">
+                    <div class="col-md-2">
                     <a class="btn btn-primary " href="{{ url()->previous() }}" style="width: 100%;  margin-right: 10px"> Voltar</a> 
                         
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-2">
                     <a class="btn btn-danger " href="#ticket-edit-mesa-modal" data-toggle="modal" data-target="#ticket-edit-mesa-modal" style="width: 100%;"> Finalizar <i class="fa fa-arrow-circle-right"></i></a>
                         
                     </div>
+
                    </div> 
             
         
@@ -94,7 +106,13 @@
                     {{ csrf_field() }}
                         <div class="panel-body">
 
-                            <div class="box-body table-responsive no-padding">     
+                            <div class="box-body table-responsive no-padding"> 
+                                    
+
+                            <div class="col-md-8 row input-group">
+
+                            </div> 
+
                                 <table id="reclatodas" class="table table-striped  table-hover" cellspacing="0" width="100%">
                                     <thead >
                                     <tr>
@@ -160,10 +178,13 @@
                     <div class="modal-body">
 
                         <div class="row">
+   
+
                             <div class="center-block"> 
                                 <h3> 
                                 Total a Pagar:
-                                <input class="form-control total"   type="number" name="porpagar" id="porpagar" style="width: auto;" disabled="true" value="">
+
+                                <input class="form-control total col-md-6"   type="number" name="porpagar" id="porpagar" style="width: auto;" disabled="true" value="">
                                 </h3>
                             </div>
                         </div>
@@ -385,8 +406,12 @@
                             <div class="clearfix"></div>
 
                             <div class="modal-footer">
+
+                     
+                                
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                                 <input class="btn btn-primary" type="submit" value="Efectuar pagamento da conta">
+                                <input class="btn btn-danger" id="credito" name="credito" type="submit" value="Creditar ao cliente">
                                 </div>
                     </form>
                         </div>
@@ -553,6 +578,107 @@
             });
             </script>
 
+
+            <script type="text/javascript">
+                //add venda
+
+
+
+
+                $("#credito").click(function(e){
+                    e.preventDefault();
+
+
+                    var fpagamento = $('[name="fpagamento[]"]');
+                    var detalhes = $('[name="detalhes[]"]');
+                    var referencia = $('[name="referencia[]"]');
+                    var valor = $('[name="valor[]"]');
+                    $mesa_id=($('[name="mesa_id"]').val());
+                    $porpagar=($('[name="porpagar"]').val());
+                    $pago=($('[name="pago"]').val());
+                    $ppago=($('[name="ppago"]').val());
+                    $troco=($('[name="troco"]').val());
+                  
+
+                    var _fpagamento = [];
+                    var _detalhes=[];
+                    var _referencia = [];
+                    var _valor=[];
+
+
+                    for (var i = 0; i < fpagamento.length; i++) {
+                        _fpagamento.push($(fpagamento).eq(i).val());
+                        _detalhes.push($(detalhes).eq(i).val())
+                        _referencia.push($(referencia).eq(i).val());
+                        _valor.push($(valor).eq(i).val())
+                        
+                    }
+
+
+                if (confirm("Tens a certeza que pretendes Efectuar credito para esta venda : " + $porpagar + "?"))
+                {   
+                 
+
+                  
+                
+                $.ajax({
+                  url: "{{URL('efectuarpagamento')}}",
+                  type:'POST',
+                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco},
+
+                  success: function(data) {
+                        //zerando os campos
+                        $porpagar=($('[name="porpagar"]').val(0));
+                        $pago=($('[name="pago"]').val(0));
+                        $ppago=($('[name="ppago"]').val(0));
+                        $troco=($('[name="troco"]').val(0));
+                        var referencia = $('[name="referencia[]"]').val(0);
+                        var valor = $('[name="valor[]"]').val(0);
+
+                        $('#reclatodas > tbody') .html(data);
+
+
+                            //retornando total
+                             var total=$('[name="total[]"]')
+                             var __total=[];
+                             var sum=0;
+                             var _total=0;
+
+                             for (var i=0;i<total.length;i++){
+                                __total=$(total).eq(i).val();
+                                _total=parseFloat(__total)+parseFloat(_total);
+                             }
+                            //alert(parseFloat(_total))
+                                $(".total").val(_total);
+
+                                  window.location.replace("{{ url('creditarvenda') }}");//here double curly bracket
+
+                                swal("Pagamento Aceito com Sucesso!", "Você adicionou um pagamento", "success");
+
+
+
+                        
+
+
+                    //alert(data);
+
+
+                },
+
+                error: function(data){
+                    alert("Atenção algo de errado com a sua requizição, contacte o administrador");
+                }
+                });
+
+                }//end confirmation
+
+
+                });
+            </script>
+
+
+
+
             <script type="text/javascript">
                 //add venda
 
@@ -695,9 +821,6 @@
                 
             }));
             </script>
-
-
-
         
     </body>
 </html>
