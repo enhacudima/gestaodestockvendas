@@ -77,6 +77,7 @@ class ClienteController extends Controller
  
             // search loan  by loanid or nuit
             $clientes = Cliente::where('contacto1', 'LIKE', '%' . $term .'%')
+            				->where('credito', 'sim')
                             ->orWhere('contacto2', 'LIKE', '%' . $term .'%')
                             ->orwhere('name','LIKE','%'.$term.'%')
                             ->get();

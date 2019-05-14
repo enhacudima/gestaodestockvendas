@@ -15,7 +15,7 @@ class CarController extends Controller
 
     	$mesa_id=$id;
     	$car=Car::get();
-    	$car_temp=CarTemp::join('car','car_temp.car_id','car.id')->select('car_temp.*','car.matricula','car.name','car.sname','car.contacto1','car.contacto2','car.marca')->get();
+    	$car_temp=CarTemp::where('car_mesa',$mesa_id)->join('car','car_temp.car_id','car.id')->select('car_temp.*','car.matricula','car.name','car.sname','car.contacto1','car.contacto2','car.marca')->get();
     
 
     	return view('admin.car.index',compact('mesa_id','car','car_temp'));

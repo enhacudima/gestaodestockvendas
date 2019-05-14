@@ -24,14 +24,11 @@
           <!--sweetalert-->
           <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-          <!--jquery para autocomplet--> 
-
-
-            
-            <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-            <!--and js-->
-
+        <!--jquery para autocomplet-->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>        
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" /> 
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>‌​
+        <!--and js-->
 
 
         <!--Ajax-->  
@@ -40,7 +37,7 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
+                background-color: #000000;
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
@@ -71,7 +68,7 @@
 
                    <div class="row col-md-12">
                     <div class="col-md-2">
-                    <a class="btn btn-primary " href="{{ url('home') }}" style="width: 100%;  margin-right: 10px"> Voltar</a> 
+                    <a class="btn btn-primary " href="{{ url()->previous() }}" style="width: 100%;  margin-right: 10px"> Voltar</a> 
                         
                     </div>
                     <div class="col-md-2">
@@ -84,22 +81,9 @@
         
                 <hr>
             <div class="row">
-            <div class="col-md-5" style="margin-top: 30px;margin-right: 40px">    
+<!--havia dual box-->
 
-              <form id="demoform" action="#" method="post">
-                 {{ csrf_field() }}
-                 <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true">
-                <select multiple="multiple" size="10" name="duallistbox_demo1[]" title="duallistbox_demo1[]">
-                  @foreach($produtos as $key => $cil)
-                  <option value="{{$cil->id}}">{{$cil->name}} - {{$cil->preco_final}} Mtn</option>
-                  @endforeach
-                </select>
-                <br>
-                <button type="submit" class="btn btn-primary btn-block ">Adicionar no carrinho</button>
-              </form>
-            </div>
-
-            <div class="col-md-6" style="margin-top: 55px">
+            <div class="col-md-12 " style="margin-top: 55px; margin-left: 20%">
                 <h3>Carrinho</h3>
                 <div class="row">
                 <form id="carrinhoform" action="#" method="POST">
@@ -108,11 +92,16 @@
 
                             <div class="box-body table-responsive no-padding"> 
                                     
+                            <div class="input-group control-group increment" style="margin-bottom: 10px" >
+                              <input type="text"  id="loanidshow"  name="loanidshow" class="form-control" placeholder="Pesquisar Nome, contact" required autofocus >
+                              <div class="input-group-btn" > 
+                                <button class="btn btn-success" type="button"><i class="glyphicon glyphicon-plus" ></i>+ Add</button>
+                              </div>
+                              
+                            </div>
 
-                            <div class="col-md-8 row input-group">
-
-                            </div> 
-
+                                <input type="hidden" id="cliente" name="cliente" value="" />
+                                <input type="hidden" id="inputs" name="formtype" value="credito" />
                                 <table id="reclatodas" class="table table-striped  table-hover" cellspacing="0" width="100%">
                                     <thead >
                                     <tr>
@@ -174,7 +163,6 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         
                     </div> 
-                    <input type="hidden" id="inputs" name="formtype" value="venda" />
 
                     <div class="modal-body">
 
@@ -411,8 +399,7 @@
                      
                                 
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                                <input class="btn btn-primary" type="submit" data- value="Efectuar pagamento da conta">
-                                <input class="btn btn-danger" id="credito" name="credito" type="submit" value="Creditar ao cliente">
+                                <input class="btn btn-danger" type="submit" data- value="Creditar ao Cliente">
                                 </div>
                     </form>
                         </div>
@@ -601,7 +588,7 @@
 
 
 
-                $("#formfvenda").submit(function(e){
+            $("#formfvenda").submit(function(e){
                     e.preventDefault();
 
 
@@ -614,8 +601,8 @@
                     $pago=($('[name="pago"]').val());
                     $ppago=($('[name="ppago"]').val());
                     $troco=($('[name="troco"]').val());
+                    var _formtype=($('[name="formtype"]').val());
                     var _cliente=($('[name="cliente"]').val());
-                  
 
                     var _fpagamento = [];
                     var _detalhes=[];
@@ -632,17 +619,15 @@
                     }
 
 
-                if (confirm("Tens a certeza que pretendes Efectuar o pagamento : " + $pago + "?"))
+                if (confirm("Tens a certeza que pretendes Efectuar o credito : " + $porpagar + "?"))
                 {   
+
                  
-                if ($ppago==0 & $pago!=0) 
-                {
-                  
                 
                 $.ajax({
                   url: "{{URL('efectuarpagamento')}}",
                   type:'POST',
-                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,formtype:_formtype},
+                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,cliente:_cliente,formtype:_formtype},
 
                   success: function(data) {
                         //zerando os campos
@@ -682,14 +667,10 @@
                 },
 
                 error: function(data){
-                    alert("Atenção algo de errado com a sua requizição, contacte o administrador");
+                    alert("Atenção algo de errado com a sua requizição, verfique se todos campos estão preenchidos. Contacte o administrador");
                 }
                 });
-                }else{
-                    swal("Valores não aceites","Verfica se o valor a pagar é igual a zerro (0) ou o valor pago é diferente de zerro (0)", "error")
-
-                };//end if pago =0
-
+                     swal("Credito efectuado com sucesso","Tome atenção porque este cliente tem mas um  credito adicional", "success")
                 }//end confirmation
 
 
@@ -737,6 +718,42 @@
 
                 
             }));
+            </script>
+
+            <script>
+
+                $(document).ready(function() {
+                $('#loanidshow').autocomplete({
+                    
+
+                    delay: 500,// this is in milliseconds
+
+                    minLength: 2,
+
+                    source: function(request, response) {
+
+                        $.getJSON("{{url('searchcliente')}}", {
+                            search: request.term,
+                        }, function(data) {
+                            response(data);
+                        });
+
+
+                    },
+                    focus: function(event, ui) {
+                        // prevent autocomplete from updating the textbox
+                        event.preventDefault();
+                    },
+                    select: function(event, ui) {
+                        // prevent autocomplete from updating the textbox
+                        event.preventDefault();
+         
+                        $('input[name="loanidshow"]').val(ui.item.label);
+                        $('input[name="cliente"]').val(ui.item.id);
+                        //console.log( ui.item.LoanID ); 
+                    }
+                });
+                })
             </script>
         
     </body>

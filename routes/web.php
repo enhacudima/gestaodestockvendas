@@ -49,6 +49,7 @@ Route::post('produto/entrada/update','ProdutoController@loteupdate');
 //obter lot_id
 Route::get('findlotid','ProdutoController@lotid');
 Route::get('vendasindex/{id}','VendasController@index');
+Route::get('vendascreditoindex/{id}','VendasController@creditoindex');
 Route::post('saveselection','VendasController@saveselection');
 Route::get('saveselection','VendasController@saveselection');
 Route::get('getmesatem','VendasController@getmesatem');
