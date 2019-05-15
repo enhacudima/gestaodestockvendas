@@ -60,7 +60,7 @@
     <body>
         <div class="content">
             <div class="">
-                <div class="center-block"><h2>Mesa: {{$mesa->name}}; Operador: {{ Auth::user()->name }}</h2> </div>
+                <div class="center-block"><h2>Mesa: {{$mesa->name}} - {{$car_name->matricula}}; Operador: {{ Auth::user()->name }}</h2> </div>
             </div>
             <hr>
 
@@ -89,6 +89,8 @@
               <form id="demoform" action="#" method="post">
                  {{ csrf_field() }}
                  <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true">
+                 <input type="" name="car_id" value="{{$car_id}}" hidden="true">
+                 <input type="" name="formtype" value="car" hidden="true">
                 <select multiple="multiple" size="10" name="duallistbox_demo1[]" title="duallistbox_demo1[]">
                   @foreach($produtos as $key => $cil)
                   <option value="{{$cil->id}}">{{$cil->name}} - {{$cil->preco_final}} Mtn</option>
@@ -110,6 +112,9 @@
                                     
 
                             <div class="col-md-8 row input-group">
+                 <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true">
+                 <input type="" name="car_id" value="{{$car_id}}" hidden="true">
+                 <input type="" name="formtype" value="car" hidden="true">
 
                             </div> 
 
@@ -169,6 +174,9 @@
                 <div class="modal-content" >
                     <form method="POST" action="#" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data" id="formfvenda">
                         {{ csrf_field() }}
+                        <input type="" name="car_id" value="{{$car_id}}" hidden="true">
+                        <input type="" name="formtype" value="car" hidden="true">
+                        
                     <div class="modal-header">
                         <h4 class="modal-title" id="ticket-edit-mesa-modal-Label">Finalização da Venda </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -430,11 +438,13 @@
                 console.log($('[name="duallistbox_demo1[]"]').val());
                 $dados=($('[name="duallistbox_demo1[]"]').val());
                 $mesa_id=($('[name="mesa_id"]').val());
+                $car_id=($('[name="car_id"]').val());
+                $formtype=($('[name="formtype"]').val());
 
                 $.ajax({
                   url: "{{URL('saveselection')}}",
                   type:'POST',
-                  data: {dados:$dados,mesa_id:$mesa_id},
+                  data: {dados:$dados,mesa_id:$mesa_id,car_id:$car_id,formtype:$formtype},
                   success: function(data) {
                         $('#reclatodas > tbody') .html(data);
 
@@ -478,6 +488,9 @@
                     var quantidade = $('[name="quantidade[]"]');
                     $idbulk=($('[name="idbulk"]').val());
                     $mesa_id=($('[name="mesa_id"]').val());
+                    $car_id=($('[name="car_id"]').val());
+                    $formtype=($('[name="formtype"]').val());
+
                     var _id = [];
                     var _quantidade=[];
 
@@ -493,7 +506,7 @@
                 $.ajax({
                   url: "{{URL('atualizarvendatemp')}}",
                   type:'POST',
-                  data: {idbulk:$idbulk,mesa_id:$mesa_id,id:_id,quantidade:_quantidade},
+                  data: {idbulk:$idbulk,mesa_id:$mesa_id,id:_id,quantidade:_quantidade,car_id:$car_id,formtype:$formtype},
 
                   success: function(data) {
                         $('#reclatodas > tbody') .html(data);
@@ -615,6 +628,7 @@
                     $ppago=($('[name="ppago"]').val());
                     $troco=($('[name="troco"]').val());
                     var _cliente=($('[name="cliente"]').val());
+                    var formtype=($('[name="formtype"]').val());
                   
 
                     var _fpagamento = [];
@@ -642,7 +656,7 @@
                 $.ajax({
                   url: "{{URL('efectuarpagamento')}}",
                   type:'POST',
-                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,formtype:_formtype},
+                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,formtype:formtype},
 
                   success: function(data) {
                         //zerando os campos
@@ -701,6 +715,9 @@
 
 
                     $value=$(this).data("value");
+                    $mesa_id=($('[name="mesa_id"]').val());
+                    $car_id=($('[name="car_id"]').val());
+                    $formtype=($('[name="formtype"]').val());
                     //alert($value);
                     console.log($value);
                 if (confirm("Clique 'Ok' para continuar"))
@@ -708,7 +725,7 @@
                   $.ajax({
                   url: "{{URL('apagalinha')}}",
                   type:'post',
-                  data: {linha_id:$value},
+                  data: {linha_id:$value,car_id:$car_id,formtype:$formtype},
 
                   success: function(data) {
                     $('#reclatodas > tbody') .html(data);

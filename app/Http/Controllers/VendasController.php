@@ -12,6 +12,9 @@ use App\Ajustes;
 use Auth;
 use Session;
 use App\ClienteVenda;
+use App\CarTemp;
+use App\Car;
+use App\CarVenda;
 
 
 class VendasController extends Controller
@@ -27,11 +30,38 @@ class VendasController extends Controller
           		->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
           		->join('produtos','produtos_entradas.produto_id','produtos.id')
           		->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
-          		->orderBy('vendas_temp_mesa.created_at')
+          		->orderBy('vendas_temp_mesa.created_at','desc')
           		->get(); 
         $mesa=Mesa::find($mesa_id);  		           
 
          return view('vendas.index', compact('produtos','mesa_id','data_mesa','mesa'));           
+    }    
+
+    public function carindex($car_id, $mesa_id, $user_id)
+    {
+        $car_temp=CarTemp::find($car_id);
+
+        $car_name=Car::find($car_temp->car_id); 
+
+        $car_=  $car_name->id;          
+      
+        $produtos=Entradas::join('produtos','produtos_entradas.produto_id','produtos.id')
+                    ->select('produtos_entradas.*','produtos.name')
+                    ->where('produtos_entradas.status','!=','0')
+                    ->get();
+        $data_mesa=VendasTempMesa::where('mesa_id',$mesa_id)->whereNull('codigo_venda')->where('vendas_temp_mesa.car_id',$car_)
+              ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
+              ->join('produtos','produtos_entradas.produto_id','produtos.id')
+              ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
+              ->get(); 
+        $mesa=Mesa::find($mesa_id); 
+
+
+        //dd($data_mesa);
+
+
+         return view('vendas.carindex', compact('produtos','mesa_id','data_mesa','mesa','car_id','user_id','car_name'));           
     }
 
 
@@ -46,7 +76,7 @@ class VendasController extends Controller
               ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
               ->join('produtos','produtos_entradas.produto_id','produtos.id')
               ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
-              ->orderBy('vendas_temp_mesa.created_at')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
               ->get(); 
         $mesa=Mesa::find($mesa_id);                
 
@@ -63,24 +93,49 @@ class VendasController extends Controller
         	$data=$request->all();
         	$identificador_de_bulk='mesa'.'_'.time();
         	$mesa_id=$data['mesa_id'];
+           if ($request->formtype=="car") {
+            $car_temp=CarTemp::find($data['car_id']);
+            $car_name=Car::find($car_temp->car_id); 
+            $car_=  $car_name->id; 
+           }
 
         	$mesa=Mesa::find($mesa_id);
         	$mesa->status=0;
         	$mesa->save();
 
+          if ($request->formtype=="car") {
+            $carvenda= new CarVenda();
+            $carvenda->user_id=$user_id = (!Auth::guest()) ? Auth::user()->id : null ;//user_id  
+            $carvenda->car_id=$car_id=$request->car_id;
+            $carvenda->mesa_id=$mesa_id= $mesa_id;
+            $carvenda->codigo_venda=$codigo_venda=$identificador_de_bulk;
+            $carvenda->save();
+
+
+            
+          }
 
          
           	foreach ($data['dados'] as $key => $value) {
              //verficando duplicados  
+            if ($request->formtype=="car") {
+            $duplicate=VendasTempMesa::where('produto_id',$value)
+                                      ->where('mesa_id',$data['mesa_id'])
+                                      ->where('car_id',$car_)
+                                      ->whereNull('codigo_venda')
+                                      ->first();
+              }else{
             $duplicate=VendasTempMesa::where('produto_id',$value)
                                       ->where('mesa_id',$data['mesa_id'])
                                       ->whereNull('codigo_venda')
                                       ->first();
+                  }                    
             if ($duplicate) {
               $quantidadeNova=$duplicate->quantidade+1;
               $duplicate->update(['quantidade'=> $quantidadeNova,
 
               ]);
+
             }else{
           	$user_id = (!Auth::guest()) ? Auth::user()->id : null ;//user_id	          	
 	      		$produtos=new VendasTempMesa();
@@ -89,6 +144,12 @@ class VendasController extends Controller
 	      		$produtos->quantidade=1;
 	      		$produtos->identificador_de_bulk=$identificador_de_bulk;
 	      		$produtos->mesa_id=$data['mesa_id'];
+
+            if ($request->formtype=="car") {
+            $produtos->car_id=$car_name->id;
+            
+            }
+
 	      		$produtos->save();
             }  
 
@@ -96,12 +157,23 @@ class VendasController extends Controller
           	}
 
           	$output="";
-          	$data_mesa=VendasTempMesa::where('mesa_id',$data['mesa_id'])->whereNull('codigo_venda')
+
+            if ($request->formtype=="car") {
+            
+          	$data_mesa=VendasTempMesa::where('mesa_id',$data['mesa_id'])->whereNull('codigo_venda')->where('vendas_temp_mesa.car_id',$car_)
           		->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
           		->join('produtos','produtos_entradas.produto_id','produtos.id')
           		->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
-          		->orderBy('vendas_temp_mesa.created_at')
-          		->get();
+          		->orderBy('vendas_temp_mesa.created_at','desc')
+          		->get();            
+            }else{
+            $data_mesa=VendasTempMesa::where('mesa_id',$data['mesa_id'])->whereNull('codigo_venda')
+              ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
+              ->join('produtos','produtos_entradas.produto_id','produtos.id')
+              ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
+              ->get();
+            }
 
           	foreach ($data_mesa as $key => $value) {
           		$output.=
@@ -136,6 +208,13 @@ class VendasController extends Controller
         	$idbulk=$data['mesa_id'];
         	$quantidade = $data['quantidade'];
 
+          if ($request->formtype=="car") {
+          $car_temp=CarTemp::find($data['car_id']);
+          $car_name=Car::find($car_temp->car_id); 
+          $car_=  $car_name->id; 
+
+          }
+
         	foreach ($data['id'] as $key => $value) {
           		$user_id = (!Auth::guest()) ? Auth::user()->id : null ;//user_id	          	
 	      		$produtos=VendasTempMesa::find($value);
@@ -147,12 +226,27 @@ class VendasController extends Controller
 
 
         	$output="";
-          	$data_mesa=VendasTempMesa::where('mesa_id',$data['mesa_id'])->whereNull('codigo_venda')
+
+          if ($request->formtype=="car") {
+            
+          	$data_mesa=VendasTempMesa::where('mesa_id',$data['mesa_id'])->whereNull('codigo_venda')->where('vendas_temp_mesa.car_id',$car_)
           		->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
           		->join('produtos','produtos_entradas.produto_id','produtos.id')
           		->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
-          		->orderBy('vendas_temp_mesa.created_at')
+          		->orderBy('vendas_temp_mesa.created_at','desc')
           		->get();
+
+            }else{
+
+            $data_mesa=VendasTempMesa::where('mesa_id',$data['mesa_id'])->whereNull('codigo_venda')
+              ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
+              ->join('produtos','produtos_entradas.produto_id','produtos.id')
+              ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
+              ->get();
+
+
+            }
 
           	foreach ($data_mesa as $key => $value) {
           		$output.=
@@ -187,7 +281,7 @@ class VendasController extends Controller
               ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
               ->join('produtos','produtos_entradas.produto_id','produtos.id')
               ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
-              ->orderBy('vendas_temp_mesa.created_at')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
               ->get();
 
             foreach ($data_mesa as $key => $value) {
@@ -209,7 +303,7 @@ class VendasController extends Controller
     {
     	if ($request->ajax()) 
     	{
-    		$request->except('_token');	
+    		  $request->except('_token');	
         	$data=$request->all();
         	$detalhes=$data['detalhes'];
         	$referencia=$data['referencia'];
@@ -223,7 +317,7 @@ class VendasController extends Controller
           $formtype=$data['formtype'];
           $user_id = (!Auth::guest()) ? Auth::user()->id : null ;//user_id  
 
-          if ($formtype=='credito') {
+          if ($formtype=='credito') {//verficação se a venda é credito ou não
             $cliente=$data['cliente'];
 
             $ClienteVenda= new ClienteVenda();
@@ -247,10 +341,33 @@ class VendasController extends Controller
 	      		$vendas->identificador_bulck=$identificador_bulck;
 	      		$vendas->save();
 
+          if ($formtype=='credito') {//verficação se a venda é credito ou não
+            $cliente=$data['cliente'];
+
+            $ClienteVenda= new ClienteVenda();
+            $ClienteVenda->cliente_id=$cliente;
+            $ClienteVenda->form_type=$formtype;
+            $ClienteVenda->codigo_venda=$identificador_bulck;
+            $ClienteVenda->user_id=$user_id;
+            $ClienteVenda->save();
+
+          }
 
 
+            if ($data['car_id']) {
+            $car_temp=CarTemp::find($data['car_id']);
+            $car_name=Car::find($car_temp->car_id); 
+            $car_=  $car_name->id; 
 
-	      		VendasTempMesa::where('mesa_id',$mesa_id)->whereNull('codigo_venda')->update(['codigo_venda'=>$identificador_bulck]);
+            VendasTempMesa::where('mesa_id',$mesa_id)->whereNull('codigo_venda')->where('car_id',$car_)->update(['codigo_venda'=>$identificador_bulck]);
+
+            }else{
+	      		
+            VendasTempMesa::where('mesa_id',$mesa_id)->whereNull('codigo_venda')->update(['codigo_venda'=>$identificador_bulck]);
+
+            }
+
+
 
           	}
 
@@ -269,7 +386,7 @@ class VendasController extends Controller
           		->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
           		->join('produtos','produtos_entradas.produto_id','produtos.id')
           		->select('produtos.name','vendas_temp_mesa.quantidade as quantidade_unidade','produtos_entradas.produto_id','produtos_entradas.id as lot_id','produtos_entradas.preco_final as preco_uni','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
-          		->orderBy('vendas_temp_mesa.created_at')
+          		->orderBy('vendas_temp_mesa.created_at','desc')
           		->get();
 
           		foreach ($data_mesa as $key => $value) {
@@ -308,6 +425,12 @@ class VendasController extends Controller
           $request->except('_token'); 
           $data=$request->all();
 
+          if ($request->formtype=="car") {
+          $car_temp=CarTemp::find($data['car_id']);
+          $car_name=Car::find($car_temp->car_id); 
+          $car_=  $car_name->id;
+          } 
+
 
           $identificador_de_bulk='mesa'.'_'.time();
           $linha_id=$data['linha_id'];
@@ -317,12 +440,23 @@ class VendasController extends Controller
 
 
             $output="";
+
+            if ($request->formtype=="car") {
+            $data_mesa=VendasTempMesa::where('mesa_id',$mesa_id->mesa_id)->whereNull('codigo_venda')->where('vendas_temp_mesa.car_id',$car_)
+              ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
+              ->join('produtos','produtos_entradas.produto_id','produtos.id')
+              ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
+              ->get();
+            
+            }else{
             $data_mesa=VendasTempMesa::where('mesa_id',$mesa_id->mesa_id)->whereNull('codigo_venda')
               ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
               ->join('produtos','produtos_entradas.produto_id','produtos.id')
               ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
-              ->orderBy('vendas_temp_mesa.created_at')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
               ->get();
+            }  
 
             foreach ($data_mesa as $key => $value) {
               $output.=

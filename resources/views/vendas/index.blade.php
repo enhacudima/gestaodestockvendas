@@ -88,6 +88,7 @@
 
               <form id="demoform" action="#" method="post">
                  {{ csrf_field() }}
+                 <input type="" name="formtype" value="venda" hidden="true">
                  <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true">
                 <select multiple="multiple" size="10" name="duallistbox_demo1[]" title="duallistbox_demo1[]">
                   @foreach($produtos as $key => $cil)
@@ -430,11 +431,12 @@
                 console.log($('[name="duallistbox_demo1[]"]').val());
                 $dados=($('[name="duallistbox_demo1[]"]').val());
                 $mesa_id=($('[name="mesa_id"]').val());
+                $formtype=($('[name="formtype"]').val());
 
                 $.ajax({
                   url: "{{URL('saveselection')}}",
                   type:'POST',
-                  data: {dados:$dados,mesa_id:$mesa_id},
+                  data: {dados:$dados,mesa_id:$mesa_id,formtype:$formtype},
                   success: function(data) {
                         $('#reclatodas > tbody') .html(data);
 
@@ -614,7 +616,8 @@
                     $pago=($('[name="pago"]').val());
                     $ppago=($('[name="ppago"]').val());
                     $troco=($('[name="troco"]').val());
-                    var _cliente=($('[name="cliente"]').val());
+                    var _cliente=($('[name="cliente"]').val()); 
+                    var $formtype=($('[name="formtype"]').val());
                   
 
                     var _fpagamento = [];
@@ -642,7 +645,7 @@
                 $.ajax({
                   url: "{{URL('efectuarpagamento')}}",
                   type:'POST',
-                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,formtype:_formtype},
+                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,formtype:$formtype},
 
                   success: function(data) {
                         //zerando os campos

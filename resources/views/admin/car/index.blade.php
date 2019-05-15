@@ -116,7 +116,7 @@
                      </td> 
                      <td> 
 
-                        <a class="btn btn btn-success btn-xs"   href="{{url('cartemp', [$cil->id,$mesa_id,Auth::user()->id])}}">
+                        <a class="btn btn btn-success btn-xs"   href="{{url('carvendasindex', [$cil->id,$mesa_id,Auth::user()->id])}}">
                             Serviços
                         </a>
                      </td>
