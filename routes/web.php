@@ -56,6 +56,7 @@ Route::get('saveselection','VendasController@saveselection');
 Route::get('getmesatem','VendasController@getmesatem');
 Route::post('atualizarvendatemp','VendasController@atualizarvendatemp');
 Route::post('efectuarpagamento','VendasController@efectuarpagamento');
+Route::post('efectuarpagamentocredito','VendasController@efectuarpagamentocredito');
 Route::post('efectuarcredito','VendasController@efectuarcredito');
 Route::get('listapedidos','VendasController@listapedidos');
 Route::get('creditarvenda','VendasController@creditarvenda');
@@ -71,6 +72,15 @@ Route::post('report_auditar_filter','ReportController@reportAuditarFilter');
 Route::get('report_inflow','ReportController@reportInflow');
 Route::get('report_produto_venda','ReportController@reportProdutoVenda');
 Route::get('report_auditar','ReportController@reportAuditar');
+Route::get('report_vendacredito','ReportController@vendascredito');
+Route::get('listapedidoscliente','ReportController@listapedidos');
+Route::get('pagamentocliente','ReportController@pagamentocliente');
+Route::post('report_vendacredito_filter','ReportController@vendascreditofiltre');
+Route::get('report_vendacar','ReportController@vendascar');
+Route::post('report_vendacar_filter','ReportController@vendascarfilter');
+
+
+
 
 
 
@@ -93,5 +103,7 @@ Route::post('storcliente','ClienteController@storcliente');
 Route::get('clienteshow/{id}','ClienteController@clienteshow');
 Route::post('updatecliente','ClienteController@updatecliente');
 Route::get('searchcliente','ClienteController@searchcliente')->name('searchloanid');
+
+
 
 

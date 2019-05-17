@@ -9,6 +9,12 @@ use App\CarTemp;
 class CarController extends Controller
 {
     
+        public function __construct()
+    {
+        $this->middleware('auth');
+
+
+    }
 
     public function carindex ($id)
     {

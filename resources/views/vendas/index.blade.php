@@ -186,7 +186,7 @@
                                 <h3> 
                                 Total a Pagar:
 
-                                <input class="form-control total col-md-6"   type="number" name="porpagar" id="porpagar" style="width: auto;" disabled="true" value="">
+                                <input class="form-control total col-md-6"   type="number" step="0.01" name="porpagar" id="porpagar" style="width: auto;" disabled="true" value="">
                                 </h3>
                             </div>
                         </div>
@@ -224,13 +224,13 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor"  type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor"  type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>
 
                                 <div class="row" style="margin-right: 4px;margin-bottom: 3px">
                                     <div class="col-md-3">
-                                        <input class="form-control "  type="text" name="fpagamento[]" value="Cartão" disabled="">
+                                        <input class="form-control " step="0.01" type="text" name="fpagamento[]" value="Cartão" disabled="">
                                     </div>
 
                                     <div class="col-md-3">
@@ -298,7 +298,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor" type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>
 
@@ -316,7 +316,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor" type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>
 
@@ -334,7 +334,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor" type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>                  
 
@@ -352,7 +352,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor" type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>
                                 <hr>                 
@@ -366,7 +366,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control " type="number" name="pago" id="pago" value="0" required="" disabled="">
+                                        <input class="form-control " type="number" step="0.01" name="pago" id="pago" value="0" required="" disabled="">
                                     </div>
                                 </div>           
 
@@ -379,7 +379,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control total" type="number" name="ppago" id="ppago" value="0" required="" disabled="">
+                                        <input class="form-control total" type="number" step="0.01" name="ppago" id="ppago" value="0" required="" disabled="">
                                     </div>
                                 </div>           
 
@@ -392,7 +392,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control" type="number" name="troco" id="troco" value="0" required="" disabled="">
+                                        <input class="form-control" type="number" step="0.01" name="troco" id="troco" value="0" required="" disabled="">
                                     </div>
                                 </div>
                               <!-- Custom Tabs -->

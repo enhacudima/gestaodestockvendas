@@ -174,9 +174,8 @@
                 <div class="modal-content" >
                     <form method="POST" action="#" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data" id="formfvenda">
                         {{ csrf_field() }}
-                        <input type="" name="car_id" value="{{$car_id}}" hidden="true">
-                        <input type="" name="formtype" value="car" hidden="true">
-                        
+
+
                     <div class="modal-header">
                         <h4 class="modal-title" id="ticket-edit-mesa-modal-Label">Finalização da Venda </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -187,13 +186,14 @@
                     <div class="modal-body">
 
                         <div class="row">
-   
+                            <input type="" name="car_id" value="{{$car_id}}" hidden="true">
+                            <input type="" name="formtype" value="car" hidden="true">
 
                             <div class="center-block"> 
                                 <h3> 
                                 Total a Pagar:
 
-                                <input class="form-control total col-md-6"   type="number" name="porpagar" id="porpagar" style="width: auto;" disabled="true" value="">
+                                <input class="form-control total col-md-6"   type="number" step="0.01" name="porpagar" id="porpagar" style="width: auto;" disabled="true" value="">
                                 </h3>
                             </div>
                         </div>
@@ -231,7 +231,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor"  type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor"  type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>
 
@@ -305,7 +305,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor" type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>
 
@@ -323,7 +323,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor" type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>
 
@@ -341,7 +341,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor" type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>                  
 
@@ -359,7 +359,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control valor" type="number" name="valor[]" value="0" required="">
+                                        <input class="form-control valor" type="number" step="0.01" name="valor[]" value="0" required="">
                                     </div>
                                 </div>
                                 <hr>                 
@@ -373,7 +373,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control " type="number" name="pago" id="pago" value="0" required="" disabled="">
+                                        <input class="form-control " type="number" step="0.01" name="pago" id="pago" value="0" required="" disabled="">
                                     </div>
                                 </div>           
 
@@ -386,7 +386,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control total" type="number" name="ppago" id="ppago" value="0" required="" disabled="">
+                                        <input class="form-control total" type="number" step="0.01" name="ppago" id="ppago" value="0" required="" disabled="">
                                     </div>
                                 </div>           
 
@@ -399,7 +399,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control" type="number" name="troco" id="troco" value="0" required="" disabled="">
+                                        <input class="form-control" type="number" step="0.01" name="troco" id="troco" value="0" required="" disabled="">
                                     </div>
                                 </div>
                               <!-- Custom Tabs -->
@@ -629,6 +629,7 @@
                     $troco=($('[name="troco"]').val());
                     var _cliente=($('[name="cliente"]').val());
                     var formtype=($('[name="formtype"]').val());
+                    $car_id=($('[name="car_id"]').val());
                   
 
                     var _fpagamento = [];
@@ -656,7 +657,7 @@
                 $.ajax({
                   url: "{{URL('efectuarpagamento')}}",
                   type:'POST',
-                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,formtype:formtype},
+                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,formtype:formtype,car_id:$car_id},
 
                   success: function(data) {
                         //zerando os campos

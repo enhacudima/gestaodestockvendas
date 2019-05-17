@@ -18,7 +18,18 @@ use App\CarVenda;
 
 
 class VendasController extends Controller
-{
+{   
+
+
+
+      public function __construct()
+    {
+        $this->middleware('auth');
+
+
+    }
+
+    
     public function index($id)
     {
     	$mesa_id=$id;
@@ -106,7 +117,7 @@ class VendasController extends Controller
           if ($request->formtype=="car") {
             $carvenda= new CarVenda();
             $carvenda->user_id=$user_id = (!Auth::guest()) ? Auth::user()->id : null ;//user_id  
-            $carvenda->car_id=$car_id=$request->car_id;
+            $carvenda->car_id=$car_id=$car_;
             $carvenda->mesa_id=$mesa_id= $mesa_id;
             $carvenda->codigo_venda=$codigo_venda=$identificador_de_bulk;
             $carvenda->save();
@@ -341,20 +352,9 @@ class VendasController extends Controller
 	      		$vendas->identificador_bulck=$identificador_bulck;
 	      		$vendas->save();
 
-          if ($formtype=='credito') {//verficação se a venda é credito ou não
-            $cliente=$data['cliente'];
-
-            $ClienteVenda= new ClienteVenda();
-            $ClienteVenda->cliente_id=$cliente;
-            $ClienteVenda->form_type=$formtype;
-            $ClienteVenda->codigo_venda=$identificador_bulck;
-            $ClienteVenda->user_id=$user_id;
-            $ClienteVenda->save();
-
-          }
 
 
-            if ($data['car_id']) {
+            if (!empty($data['car_id'])) {
             $car_temp=CarTemp::find($data['car_id']);
             $car_name=Car::find($car_temp->car_id); 
             $car_=  $car_name->id; 
@@ -363,7 +363,7 @@ class VendasController extends Controller
 
             }else{
 	      		
-            VendasTempMesa::where('mesa_id',$mesa_id)->whereNull('codigo_venda')->update(['codigo_venda'=>$identificador_bulck]);
+            VendasTempMesa::where('mesa_id',$mesa_id)->whereNull('codigo_venda')->whereNull('car_id')->update(['codigo_venda'=>$identificador_bulck]);
 
             }
 
@@ -402,9 +402,14 @@ class VendasController extends Controller
 	          		$ajuste->save();
           		}
 
-              $mesa=Mesa::find($mesa_id);
-              $mesa->status=1;
-              $mesa->save();
+            
+            VendasTempMesa::where('mesa_id',$mesa_id)->whereNull('codigo_venda')->update(['codigo_venda'=>$identificador_bulck]);
+
+          
+
+            $mesa=Mesa::find($mesa_id);
+            $mesa->status=1;
+            $mesa->save();
 
 
 
@@ -412,6 +417,59 @@ class VendasController extends Controller
 
     		
     	}
+    }
+
+
+
+    public function efectuarpagamentocredito(Request $request)
+    {
+      if ($request->ajax()) 
+      {
+          $request->except('_token'); 
+          $data=$request->all();
+          $detalhes=$data['detalhes'];
+          $referencia=$data['referencia'];
+          $valor=$data['valor'];
+          $identificador_bulck=$data['codigo_venda'];
+          $mesa_id=0;
+          $porpagar=$data['porpagar'];
+          $pago=$data['pago'];
+          $ppago=$data['ppago'];
+          $_troco=$data['_troco'];          
+          $formtype=$data['formtype'];
+          $user_id = (!Auth::guest()) ? Auth::user()->id : null ;//user_id  
+
+
+          foreach ($data['fpagamento'] as $key => $value) {
+            $user_id = (!Auth::guest()) ? Auth::user()->id : null ;//user_id              
+            $vendas= new Vendas();
+            $vendas->user_id=$user_id;
+            $vendas->mesa_id=$mesa_id;
+            $vendas->fpagamento=$value;
+            $vendas->detalhes=$detalhes[$key];
+            $vendas->referencia=$referencia[$key];
+            $vendas->valor=$valor[$key];
+            $vendas->identificador_bulck=$identificador_bulck;
+            $vendas->save();
+
+
+            }
+
+              $troco=new VendasTroco();
+              $troco->user_id=$user_id;
+              $troco->codigo_venda=$identificador_bulck;
+              $troco->mesa_id=$mesa_id;
+              $troco->total_venda=$porpagar;
+              $troco->total_pago=$pago;
+              $troco->total_porpagar=$ppago;
+              $troco->total_troco=$_troco;
+              $troco->save();
+
+              $mesa=Mesa::find($mesa_id);
+              $mesa->status=1;
+              $mesa->save();
+        
+      }
     }
 
 

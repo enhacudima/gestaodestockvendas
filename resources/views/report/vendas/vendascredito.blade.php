@@ -1,165 +1,235 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('adminlte::page')
 
-        <title>Bmdevendas|Vendas</title>
+@section('title', 'BM | Report Venda a Credito')
 
+@section('content_header')
+    <h1>Settings</h1>
+@stop
 
-
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-          <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
-          <link rel="stylesheet" type="text/css" href="{{asset('src/bootstrap-duallistbox.css')}}">
-          <script src="https://code.jquery.com/jquery-3.2.1.min.js"  ></script>
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-          <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-          <script src="{{ asset('src/jquery.bootstrap-duallistbox.js') }}"></script>
-          <!--sweetalert-->
-          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-        <!--jquery para autocomplet-->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>        
-        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" /> 
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>‌​
-        <!--and js-->
+@section('content')
+@include('inc.messages')
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
-        <!--Ajax-->  
+<div class="">
+    <div class="">
+    <div class="panel panel-default">
 
+    <div class="panel-heading">
+        <h4>Report Venda a credito
+        </h4>
+    </div>
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #000000;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+    <div class="panel-body">
+
+        <form id="myForm" name="myForm" action="{{url('/report_vendacredito_filter')}}" method="post">
+                @csrf
+                {{ csrf_field() }}
+    <div class="">
+        <div class="form-group col-sm-2">
+                <label >Data Inicio</label>
+                
+                        <input class="form-control" type="date" tyle="width: 100%"  id="inicio"  name="inicio" required autofocus>
+                
+
+        </div>
+
+        <div class="form-group  col-sm-2 ">
+                <label >Data Fim</label>
             
-        </style>
+                        <input class="form-control" type="date" tyle="width: 100%"  id="fim"  name="fim" required autofocus >
+                
 
-        <style type="text/css">
-            .center-block {
-            padding:10px;
-            color:#ec8007
-            }
-        </style>
-    </head>
-    <body>
-        <div class="content">
-            <div class="">
-                <div class="center-block"><h2>Mesa: {{$mesa->name}}; Operador: {{ Auth::user()->name }}</h2> </div>
-            </div>
-            <hr>
+        </div>
 
+        </div>
+
+        <div class="">
+        <p class="submit col">
+            <strong>
+            <button type="submit" class="btnEmidio btn btn-primary bord0" value="1" id="gravar">Atualizar </button>
+            </strong>
+        </p>
+
+        </div>   
+
+
+    <input hidden="" htype="" name="idusuario" id="idusuario" value="{{ Auth::user()->id }}">
            
 
 
-            <div class="col-md-12">
+    </form> 
 
-                   <div class="row col-md-12">
-                    <div class="col-md-2">
-                    <a class="btn btn-primary " href="{{ url()->previous() }}" style="width: 100%;  margin-right: 10px"> Voltar</a> 
+    
+
+    <div class="col-lg-12">
+    <div class="panel panel-default">
+
+    <div class="panel-heading">
+        <h4>Vendas a Credito
+        </h4>
+    </div>
+
+    <div class="panel-body">
+
+    <div class="box-body table-responsive no-padding">     
+        <table id="reclatodas" class="table table-striped  table-hover" cellspacing="0" width="100%">
+            <thead >
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Apelido</th>
+                <th scope="col">Contacto</th>
+                <th scope="col">Data</th>
+                <th scope="col">Criado por</th>
+                <th scope="col">Detalhes</th>
+                <th scope="col">Total da venda</th>
+                <th scope="col">Total Pago</th>
+                <th scope="col">Total Por Pagar</th>
+                <th scope="col">Total de Troco</th>
+                <th scope="col">Codigo de Pagamento</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if(isset($venda))  
+ 
+            @foreach($venda as $cil)
+                <tr>
+                <td>{{$cil->cname}}</td> 
+                <td>{{$cil->clname}}</td> 
+                <td>{{$cil->contacto1}} & {{$cil->contacto2}}</td>
+                <td>{{$cil->created_at}}</td> 
+                <td>{{$cil->uname}}</td>
+                <td>             
+                <a class="btn btn btn-success btn-xs" href="#ticket-edit-mesa-modal" type="submit" data-toggle="modal" data-target="#ticket-edit-mesa-modal"  data-value="{{$cil->codigo_venda}}" id="droplist">
+                    <i class="fa fa-eye fa-fw"></i> 
+                </a>
+                <a id="creditar" class="btn btn btn-danger btn-xs" href="#ticket-edit-sale-modal" data-toggle="modal" data-target="#ticket-edit-sale-modal"  data-value="{{$cil->codigo_venda}}">
+                    <i class="fa fa-free-code-camp fa-fw"></i> 
+                </a>
+                </td> 
+                <td>{{$cil->total_venda}}</td>
+                <td>{{$cil->total_pago}}</td> 
+                <td>{{$cil->total_porpagar}}</td>
+                <td>{{$cil->total_troco}}</td>
+                <td>{{$cil->codigo_venda}}</td>
+
+                </tr>
+            @endforeach 
+
+            @endif   
+            </tbody>
+        </table>
+    </div>    
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+
+
+        <!--modal edite Mesa-->
+        <div class="modal fade bd-example-modal-lg" id="ticket-edit-mesa-modal" tabindex="-1" role="dialog" aria-labelledby="ticket-edit-mesa-modal-Label">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="ticket-edit-mesa-modal-Label">Detalhes </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         
-                    </div>
-                    <div class="col-md-2">
-                    <a class="btn btn-danger " href="#ticket-edit-mesa-modal" data-toggle="modal" data-target="#ticket-edit-mesa-modal" style="width: 100%;"> Finalizar <i class="fa fa-arrow-circle-right"></i></a>
-                        
-                    </div>
+                    </div> 
 
-                   </div> 
-            
-        
-                <hr>
-            <div class="row">
-<!--havia dual box-->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                              <!-- Custom Tabs -->
+                              <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                  <li class="active"><a href="#tab_1" data-toggle="tab">Lista de Pedidos</a></li>
+                                  <li><a href="#tab_2" data-toggle="tab">Contas a Pagar</a></li>
+                                  <li><a href="#tab_3" data-toggle="tab">Contas Pagas</a></li>
+                                  <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                      Dropdown <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                                      <li role="presentation" class="divider"></li>
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+                                    </ul>
+                                  </li>
+                                  <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                                </ul>
+                                <div class="tab-content">
+                                  <div class="tab-pane active" id="tab_1">
 
-            <div class="col-md-12 " style="margin-top: 55px; margin-left: 20%">
-                <h3>Carrinho</h3>
-                <div class="row">
-                <form id="carrinhoform" action="#" method="POST">
-                    {{ csrf_field() }}
-                        <div class="panel-body">
-
-                            <div class="box-body table-responsive no-padding"> 
-                                    
-                            <div class="input-group control-group increment" style="margin-bottom: 10px" >
-                              <input type="text"  id="loanidshow"  name="loanidshow" class="form-control" placeholder="Pesquisar Nome, contact" required autofocus >
-                              <div class="input-group-btn" > 
-                                <button class="btn btn-success" type="button"><i class="glyphicon glyphicon-plus" ></i>+ Add</button>
-                              </div>
-                              
-                            </div>
-
-                                <input type="hidden" id="cliente" name="cliente" value="" />
-                                <input type="hidden" id="inputs" name="formtype" value="credito" />
-                                <table id="reclatodas" class="table table-striped  table-hover" cellspacing="0" width="100%">
-                                    <thead >
-                                    <tr>
-                                        <th scope="col">Descrição do Produto</th>
-                                        <th scope="col">Preço.(Mtn)</th>
-                                        <th scope="col">Qua.t</th>
-                                        <th scope="col">Total.(Mtn)</th>
-                                        <th scope="col">Apagar</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @if(isset($data_mesa))  
-                                    @foreach($data_mesa as $key => $value)
-                                        <tr>
-                                        <td style="width: 400px"> <input type="" name="mesa_id" value="{{$mesa_id}}" hidden="true"><input type="text" id="idbulk" name="idbulk" hidden="true" value="{{$value->identificador_de_bulk}}"><input step="0.01" type="number" id="id[]" name="id[]" hidden="true" value="{{$value->id}}"><input class="form-control" type="text" name="produt" id="produt"  disabled="" value="{{$value->name}}"></td> 
-                                        <td><input class="form-control" step="0.01" type="number" name="preco_final[]" id="preco_final[]" disabled="true" value="{{$value->preco_final}}"></td> 
-                                        <td><input class="form-control" step="0.01" type="number" name="quantidade[]" id="quantidade[]"  value="{{$value->quantidade}}"></td> 
-                                        <td><input  class="form-control" step="0.01" type="number" name="total[]" id="total[]"  disabled="" value="{{$value->quantidade * $value->preco_final}}"></td>
-                                        <td><a type="submit"class="btn btn-danger btn-xs"  data-value="{{$value->id}}" id="delete" href="#">
-                                                <i class="fa fa-trash-o fa-lg" ></i> Delete
-                                            </a>
-                                        </td>
-
-
-                                        </tr>
-                                    @endforeach 
-
-                                    @endif   
-                                    </tbody>
-                                        <tfoot>
+                                  <div class="">
+                                  <table id="example" class="display nowrap" style="width:100%">
+                                      <thead>
+                                          <tr>
+                                              <th>Produto</th>
+                                              <th>Preço (Unit)</th>
+                                              <th>Quantidade</th>
+                                              <th>Preço final</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+ 
+                                      </tbody>
+                                      <tfoot>
                                           <tr>
                                           <td></td>
                                           <td></td>
                                           <td></td>
-                                          <td><div class=""><input type="text"  class="total form-control" value="0" name="sum" id="sum" disabled="" /></div></td>
+                                          <td><div class="col-md-4"><input type="text" id="grdtot" class="grdtot form-control" value="0" name="" disabled="" /></div></td>
                                           </tr>
                                       </tfoot>
-                                </table>
-                            </div>    
+                                  </table>
+                                  </div>
+
+
+                                  </div>
+                                  <!-- /.tab-pane -->
+                                  <div class="tab-pane" id="tab_2">
+                                  </div>
+                                  <!-- /.tab-pane -->
+                                  <div class="tab-pane" id="tab_3">
+                                  </div>
+                                  <!-- /.tab-pane -->
+                                </div>
+                                <!-- /.tab-content -->
+                              </div>
+                              <!-- nav-tabs-custom -->
                             </div>
+                            <!-- /.col -->
 
-                @if ($data_mesa)
-                <button type="submit" class="row btn btn-primary btn-block " style="margin-top: 10px; width: 40%; max-width: 60%;margin-bottom: 10px">Atualizar <i class="fa fa-recycle" aria-hidden="true"></i></button>
-                @endif
-                </form>
-            </div>
-            </div>
+                    </div>
+                          
 
-            </div>
+                            <div class="clearfix"></div>
 
-            <!--modal edite Mesa-->
-        <div class="modal fade bd-example-modal-lg" id="ticket-edit-mesa-modal" tabindex="-1" role="dialog" aria-labelledby="ticket-edit-mesa-modal-Label">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                               
+                            </div>
+                        </div>
+                    </div>
+        </div>
+
+        </div>
+       <!--modal edite Mesa-->
+        <div class="modal fade bd-example-modal-lg" id="ticket-edit-sale-modal" tabindex="-1" role="dialog" aria-labelledby="ticket-edit-sale-modal-Label">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content" >
                     <form method="POST" action="#" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data" id="formfvenda">
                         {{ csrf_field() }}
                     <div class="modal-header">
-                        <h4 class="modal-title" id="ticket-edit-mesa-modal-Label">Finalização da Venda </h4>
+                        <h4 class="modal-title" id="ticket-edit-sale-modal-Label">Liquidação da Divida</h4>
+                        <input class=" codigo_venda_form" disabled="" >
+                        <input class=" codigo_venda"  name="codigo_venda" hidden="" disabled="" required="" >
+                        <input type="" name="formtype" value="credito" hidden="true">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         
                     </div> 
@@ -167,15 +237,6 @@
                     <div class="modal-body">
 
                         <div class="row">
-   
-
-                            <div class="center-block"> 
-                                <h3> 
-                                Total a Pagar:
-
-                                <input class="form-control total col-md-6"   type="number" name="porpagar" id="porpagar" style="width: auto;" disabled="true" value="">
-                                </h3>
-                            </div>
                         </div>
                         <div class="row" style="margin-bottom: 10px">
                             <div class="col-md-12">
@@ -366,7 +427,8 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <input class="form-control total" type="number" name="ppago" id="ppago" value="0" required="" disabled="">
+                                        <input class=" inporpagar" type="number" name="inporpagar" id="inporpagar" hidden="" disabled="" >
+                                        <input class="form-control total inporpagar" type="number" name="ppago" id="ppago" value="0" required="" disabled="">
                                     </div>
                                 </div>           
 
@@ -399,101 +461,137 @@
                      
                                 
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                                <input class="btn btn-danger" type="submit" data- value="Creditar ao Cliente">
+                                <input class="btn btn-danger" type="submit" data- value="Debtar ao Cliente">
                                 </div>
                     </form>
                         </div>
                     </div>
         </div> 
-    </div>
     
 
 
-            <script type="text/javascript">
-                $.ajaxSetup({
-                  headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                  }
-                });
-            </script>
+        </div> 
+@stop
+@section('js')
 
-            <script type="text/javascript">
-                //atualizando os dados na tabela temporaria 
-                $("#carrinhoform").submit(function(e){
-                    e.preventDefault();
+<script src="//cdn.datatables.net/v/bs/dt-1.10.18/datatables.min.js"></script>
 
-                    var id = $('[name="id[]"]');
-                    var quantidade = $('[name="quantidade[]"]');
-                    $idbulk=($('[name="idbulk"]').val());
-                    $mesa_id=($('[name="mesa_id"]').val());
-                    var _id = [];
-                    var _quantidade=[];
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.colVis.min.js"></script>
 
 
-                    for (var i = 0; i < id.length; i++) {
-                        _id.push($(id).eq(i).val());
-                        _quantidade.push($(quantidade).eq(i).val())
-                        
-                    }
-                    //alert(JSON.stringify(p));//or alert(p)
-                    //alert(_id+''+_quantidade+''+idbulk);   
+    <script>
+         
+    $(document).ready(function() {
+        $('#reclatodas').DataTable( {
+            columnDefs: [
+                {
+                    targets: [ 0, 1, 2 ],
+                    className: 'mdl-data-table__cell--non-numeric'
+                }
+            ],
+            "order": [[ 0, "desc" ]],
+            responsive: true,
+            dom: 'lfBrtip',
+            buttons: [
+                'excel', 'print'
+            ],
 
-                $.ajax({
-                  url: "{{URL('atualizarvendatemp')}}",
-                  type:'POST',
-                  data: {idbulk:$idbulk,mesa_id:$mesa_id,id:_id,quantidade:_quantidade},
+        } );
+    } );
+    </script>
+
+
+                <!-- JavaScript de Popup de List -->
+        <script>
+            var jqxhr = {abort: function () {}};
+
+           $(document).on('click', '#droplist',(function() {//using delegaction to send event on dynamic datatable
+
+
+                    $value=$(this).data("value");
+                    //alert($value);
+                    console.log($value);
+                  $.ajax({
+                  url: "{{URL('listapedidoscliente')}}",
+                  type:'get',
+                  data: {codigo_venda:$value},
 
                   success: function(data) {
-                        $('#reclatodas > tbody') .html(data);
-
-                            //retornando total
-                             var total=$('[name="total[]"]')
-                             var __total=[];
-                             var sum=0;
-                             var _total=0;
-
-                             for (var i=0;i<total.length;i++){
-                                __total=$(total).eq(i).val();
-                                _total=parseFloat(__total)+parseFloat(_total);
-                             }
-                            //alert(parseFloat(_total))
-                                $(".total").val(_total);
-
-                        
+                      $('#example>tbody') .html(data);
 
 
-                    //alert(data);
+                    //retornando total
+                      if (data) {
+
+                      var $tblrows = $("#example tbody tr");
+                        $tblrows.each(function (index) {
+                            var $tblrow = $(this);
+
+                            $tblrow.find('.subtot').val
+
+                               var grandTotal = 0;
+                                $(".subtot").each(function () {
+                                    var stval = parseFloat($(this).val());
+                                    grandTotal += isNaN(stval) ? 0 : stval;
+                                });
+
+                       
+                              $('.grdtot').val(grandTotal.toFixed(2));
+                         
+                        });
+                      } else{
+                        $('.grdtot').val(0)
+                      }     
 
 
                 }});
 
+                
+            }));
+            $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
 
-                });
-            </script>
+        </script> 
 
-            <script type="text/javascript">
-                //Atualizando o preço final do carrinho
-                $(window).on('load', function() {
-                 // code here
+        <script>
+            var jqxhr = {abort: function () {}};
 
-                 var total=$('[name="total[]"]')
-                 var __total=[];
-                 var sum=0;
-                 var _total=0;
+           $(document).on('click', '#creditar',(function() {//using delegaction to send event on dynamic datatable
 
-                 for (var i=0;i<total.length;i++){
-                    __total=$(total).eq(i).val();
-                    _total=parseFloat(__total)+parseFloat(_total);
-                 }
-                //alert(parseFloat(_total))
-                    $(".total").val(_total);
-                 });
 
-               
+                    $value=$(this).data("value");
+                    //alert($value);
+                    console.log($value);
+                  $.ajax({
+                  url: "{{URL('pagamentocliente')}}",
+                  type:'get',
+                  data: {codigo_venda:$value},
 
-            </script>
+                  success: function(data) {
 
-            <script type="text/javascript">
+                      $por_pargar=data[0]['total_porpagar'];
+                      $('.inporpagar').val($por_pargar);
+                      $('.codigo_venda_form').val($value);
+                      $('.codigo_venda').val($value);
+                      console.log($('.inporpagar').val())
+
+
+
+                }});
+
+                
+            }));
+            $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
+
+        </script> 
+
+                    <script type="text/javascript">
                 
             $(document).ready(function(){
 
@@ -511,7 +609,7 @@
                     //alert(parseFloat(_total))
                     $("#pago").val(_total);
 
-                    var porpagar=$('[name="porpagar"]').val();
+                    var porpagar=$('[name="inporpagar"]').val();
                     var realporpagar=parseFloat(porpagar)-parseFloat(_total);
                     if (realporpagar<=0) {
                         var troco=realporpagar;
@@ -528,24 +626,14 @@
             </script>
 
 
-            <script type="text/javascript">
-                //add venda
-
-                $("#credito").click(function(e){
-                    e.preventDefault();
-                    $mesa_id=($('[name="mesa_id"]').val());
-
-                    window.location.replace("{{ url('vendascreditoindex',$mesa_id) }}");//here double curly bracket
-
-                });
-            </script>
-
-
-
 
             <script type="text/javascript">
                 //add venda
-
+            $.ajaxSetup({
+              headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+            });
 
 
 
@@ -558,12 +646,12 @@
                     var referencia = $('[name="referencia[]"]');
                     var valor = $('[name="valor[]"]');
                     $mesa_id=($('[name="mesa_id"]').val());
-                    $porpagar=($('[name="porpagar"]').val());
+                    $porpagar=($('[name="inporpagar"]').val());
                     $pago=($('[name="pago"]').val());
                     $ppago=($('[name="ppago"]').val());
                     $troco=($('[name="troco"]').val());
                     var _formtype=($('[name="formtype"]').val());
-                    var _cliente=($('[name="cliente"]').val());
+                    var _codigo_venda=($('[name="codigo_venda"]').val());
 
                     var _fpagamento = [];
                     var _detalhes=[];
@@ -586,9 +674,9 @@
                  
                 
                 $.ajax({
-                  url: "{{URL('efectuarpagamento')}}",
+                  url: "{{URL('efectuarpagamentocredito')}}",
                   type:'POST',
-                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,cliente:_cliente,formtype:_formtype},
+                  data: {fpagamento:_fpagamento,detalhes:_detalhes,referencia:_referencia,valor:_valor,mesa_id:$mesa_id,porpagar:$porpagar,pago:$pago,ppago:$ppago,_troco:$troco,codigo_venda:_codigo_venda,formtype:_formtype, _token: '{{csrf_token()}}'},
 
                   success: function(data) {
                         //zerando os campos
@@ -598,31 +686,13 @@
                         $troco=($('[name="troco"]').val(0));
                         var referencia = $('[name="referencia[]"]').val(0);
                         var valor = $('[name="valor[]"]').val(0);
-
-                        $('#reclatodas > tbody') .html(data);
-
-
-                            //retornando total
-                             var total=$('[name="total[]"]')
-                             var __total=[];
-                             var sum=0;
-                             var _total=0;
-
-                             for (var i=0;i<total.length;i++){
-                                __total=$(total).eq(i).val();
-                                _total=parseFloat(__total)+parseFloat(_total);
-                             }
-                            //alert(parseFloat(_total))
-                                $(".total").val(_total);
-
-                                swal("Pagamento Aceito com Sucesso!", "Você adicionou um pagamento", "success");
+                        $(".total").val(0);
 
 
+                        swal("Credito efectuado com sucesso","Tome atenção porque este cliente tem mas um  credito adicional", "info")
 
-                        
+                         window.location.replace("{{ url('report_vendacredito') }}");//here double curly bracket
 
-
-                    //alert(data);
 
 
                 },
@@ -631,91 +701,41 @@
                     alert("Atenção algo de errado com a sua requizição, verfique se todos campos estão preenchidos. Contacte o administrador");
                 }
                 });
-                     swal("Credito efectuado com sucesso","Tome atenção porque este cliente tem mas um  credito adicional", "success")
+                     
                 }//end confirmation
 
 
                 });
             </script>
 
-            <script type="text/javascript">
-            $(document).on('click', '#delete',(function() {//using delegaction to send event on dynamic datatable
+
+@stop
+
+@section('css')
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css"> 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.material.min.css">   
+
+<style type="text/css">
+    .dataTables_wrapper .dt-buttons {
+  float:none;  
+  text-align:center;
+  margin-bottom: 30px;
+}
+</style>
 
 
-                    $value=$(this).data("value");
-                    //alert($value);
-                    console.log($value);
-                if (confirm("Clique 'Ok' para continuar"))
-                {
-                  $.ajax({
-                  url: "{{URL('apagalinha')}}",
-                  type:'post',
-                  data: {linha_id:$value},
-
-                  success: function(data) {
-                    $('#reclatodas > tbody') .html(data);
 
 
-                            //retornando total
-                             var total=$('[name="total[]"]')
-                             var __total=[];
-                             var sum=0;
-                             var _total=0;
 
-                             for (var i=0;i<total.length;i++){
-                                __total=$(total).eq(i).val();
-                                _total=parseFloat(__total)+parseFloat(_total);
-                             }
-                            //alert(parseFloat(_total))
-                                $(".total").val(_total);
-                       
+    <!--Out radius bottons-->
+    <style type="text/css">
 
+    /*Global*/
 
-                }}
-                );
+        .bord0 {
+        border-radius: 0;
+        }
 
-                }    
-
-
-                
-            }));
-            </script>
-
-            <script>
-
-                $(document).ready(function() {
-                $('#loanidshow').autocomplete({
-                    
-
-                    delay: 500,// this is in milliseconds
-
-                    minLength: 2,
-
-                    source: function(request, response) {
-
-                        $.getJSON("{{url('searchcliente')}}", {
-                            search: request.term,
-                        }, function(data) {
-                            response(data);
-                        });
-
-
-                    },
-                    focus: function(event, ui) {
-                        // prevent autocomplete from updating the textbox
-                        event.preventDefault();
-                    },
-                    select: function(event, ui) {
-                        // prevent autocomplete from updating the textbox
-                        event.preventDefault();
-         
-                        $('input[name="loanidshow"]').val(ui.item.label);
-                        $('input[name="cliente"]').val(ui.item.id);
-                        //console.log( ui.item.LoanID ); 
-                    }
-                });
-                })
-            </script>
         
-    </body>
-</html>
+    </style>
+@stop

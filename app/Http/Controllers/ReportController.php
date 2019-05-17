@@ -10,12 +10,24 @@ use DB;
 use Carbon\Carbon;
 use App\VendasTroco;
 use App\User;
+use App\CarVenda;
+use App\Car;
+use App\ClienteVenda;
+use App\Cliente;
+use App\VendasTempMesa;
 
 class ReportController extends Controller
 {
     
 
+        public function __construct()
+    {
+        $this->middleware('auth');
 
+
+    }
+
+    
         public function reportMovimento()
     {   
         $movimentos=DB::table('produtos_entradas_view')
@@ -229,4 +241,122 @@ class ReportController extends Controller
                   
 	       	 
     }
+
+    public function vendascredito ()
+    {
+
+    $venda=ClienteVenda::join('cliente','cliente_venda.cliente_id','cliente.id')->join('users','cliente_venda.user_id','users.id')->join('venda_troco','cliente_venda.codigo_venda','venda_troco.codigo_venda')->select('cliente.name as cname','cliente.name as clname','cliente.contacto1','cliente.contacto2','cliente_venda.created_at','users.name as uname','cliente_venda.codigo_venda', 'venda_troco.total_venda','venda_troco.total_pago','venda_troco.total_porpagar','venda_troco.total_troco')->get();
+
+
+
+    return view('report.vendas.vendascredito',compact('venda'));        
+    }
+
+
+        public function vendascreditofiltre (Request $request)
+    {
+
+        $data=$request->all();
+        $this->validate($request, [
+            'inicio'=>'required',
+            'fim'=>'required',
+            ]);
+          $inicio=Carbon::parse($request->inicio);
+          $fim=Carbon::parse($request->fim)->addHours(23)->addMinutes(59)->addSecond(59);    
+
+    $venda=ClienteVenda::whereBetween('cliente_venda.updated_at',[$inicio,$fim])->join('cliente','cliente_venda.cliente_id','cliente.id')->join('users','cliente_venda.user_id','users.id')->join('venda_troco','cliente_venda.codigo_venda','venda_troco.codigo_venda')->select('cliente.name as cname','cliente.name as clname','cliente.contacto1','cliente.contacto2','cliente_venda.created_at','users.name as uname','cliente_venda.codigo_venda', 'venda_troco.total_venda','venda_troco.total_pago','venda_troco.total_porpagar','venda_troco.total_troco')->get();
+
+
+
+    return view('report.vendas.vendascredito',compact('venda'));        
+    }
+
+
+
+
+        public function listapedidos(Request $request)
+    {
+      if($request->ajax())
+      {
+        $request->except('_token'); 
+          $data=$request->all();
+
+          $output="";
+            $data_mesa=VendasTempMesa::where('codigo_venda',$data['codigo_venda'])
+              ->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
+              ->join('produtos','produtos_entradas.produto_id','produtos.id')
+              ->select('produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id','vendas_temp_mesa.identificador_de_bulk')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
+              ->get();
+
+            foreach ($data_mesa as $key => $value) {
+              $output.=
+                       '<tr>
+                            <td>'.$value->name.'</td>
+                            <td>'.$value->preco_final.'</td>
+                            <td>'.$value->quantidade.'</td>
+                            <td>'.'<div class="col-md-4"><input type="text" class="subtot form-control" value="'.$value->quantidade * $value->preco_final.'" name="subtot" disabled="" /></div>'.'</td>
+                        </tr>';
+            }
+
+             return response($output);
+      }
+    }
+
+
+
+
+        public function pagamentocliente(Request $request)
+    {
+      if($request->ajax())
+      {
+        $request->except('_token'); 
+            $data=$request->all();
+
+            $data_mesa=VendasTroco::where('codigo_venda',$data['codigo_venda'])->latest()->get();
+
+             return response($data_mesa);
+      }
+    }
+
+
+    public function vendascar ()
+    {
+
+    $venda=VendasTempMesa::join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
+              ->join('produtos','produtos_entradas.produto_id','produtos.id')
+              ->join('car','vendas_temp_mesa.car_id','car.id')
+              ->select('car.name as car_name','car.sname as car_sname','vendas_temp_mesa.created_at','car.contacto1','car.contacto2','car.matricula as matricula','produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
+              ->get();
+
+
+    
+    return view('report.vendas.vendascar',compact('venda'));        
+    }
+
+    public function vendascarfilter (Request $request)
+    {
+
+        $data=$request->all();
+        $this->validate($request, [
+            'inicio'=>'required',
+            'fim'=>'required',
+            ]);
+          $inicio=Carbon::parse($request->inicio);
+          $fim=Carbon::parse($request->fim)->addHours(23)->addMinutes(59)->addSecond(59);  
+
+    $venda=VendasTempMesa::whereBetween('vendas_temp_mesa.updated_at',[$inicio,$fim])->join('produtos_entradas','vendas_temp_mesa.produto_id','produtos_entradas.id')
+              ->join('produtos','produtos_entradas.produto_id','produtos.id')
+              ->join('car','vendas_temp_mesa.car_id','car.id')
+              ->select('car.name as car_name','car.sname as car_sname','vendas_temp_mesa.created_at','car.contacto1','car.contacto2','car.matricula as matricula','produtos.name','vendas_temp_mesa.quantidade','produtos_entradas.preco_final','vendas_temp_mesa.id')
+              ->orderBy('vendas_temp_mesa.created_at','desc')
+              ->get();
+
+
+    
+    return view('report.vendas.vendascar',compact('venda'));        
+    }
+
+
 }

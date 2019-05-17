@@ -178,6 +178,16 @@ return [
                                                                  'text'=> 'Auditar',
                                                                  'url'  => 'report_auditar',
                                                                         
+                                                                ],  
+                                                                [
+                                                                 'text'=> 'Vendas a Credito',
+                                                                 'url'  => 'report_vendacredito',
+                                                                        
+                                                                ],   
+                                                                [
+                                                                 'text'=> 'Detalhes Car ',
+                                                                 'url'  => 'report_vendacar',
+                                                                        
                                                                 ],                       
 
                                                             ]
