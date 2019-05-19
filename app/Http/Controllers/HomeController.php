@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Mesa;
 use App\Entradas;
 use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
@@ -17,6 +18,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->authorizeResource(Post::class, 'post');
 
 
     }
@@ -29,7 +31,8 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   $mesa=Mesa::join('users','mesa.idusuario','users.id')->select('users.name as username','mesa.name','mesa.description','mesa.status','mesa.updated_at','mesa.created_at','mesa.id')->get();
+    {   
+        $mesa=Mesa::join('users','mesa.idusuario','users.id')->select('users.name as username','mesa.name','mesa.description','mesa.status','mesa.updated_at','mesa.created_at','mesa.id')->get();
 
         return view('home',compact('mesa'));
     }
