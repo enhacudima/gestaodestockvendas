@@ -19,6 +19,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
         $this->authorizeResource(Post::class, 'post');
+       // $this->middleware('can:browse_menus');
 
 
     }

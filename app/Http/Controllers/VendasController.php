@@ -465,9 +465,7 @@ class VendasController extends Controller
               $troco->total_troco=$_troco;
               $troco->save();
 
-              $mesa=Mesa::find($mesa_id);
-              $mesa->status=1;
-              $mesa->save();
+ 
         
       }
     }
